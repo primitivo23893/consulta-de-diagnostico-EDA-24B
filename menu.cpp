@@ -10,7 +10,7 @@ using namespace std;
 #define CLEAR "clear"  // Comando para limpiar pantalla en otros SO
 #endif
 
-void registroCultivo();
+void registroAnalisis();
 void consultarAnalisis();
 void editarAnalisis();
 void eliminarAnalisis();
@@ -30,7 +30,7 @@ Menu::Menu() {
 
         switch (opc) {
         case 1:
-            registroCultivo();
+            registroAnalisis();
             break;
         case 2:
             consultarAnalisis();
@@ -74,7 +74,7 @@ void Menu::setFolio(int folio) {
 }
 
 // Función para registrar un nuevo análisis de cultivo
-void registroCultivo() {
+void registroAnalisis() {
     Cultivo cultivo;
     string nombre;
 
