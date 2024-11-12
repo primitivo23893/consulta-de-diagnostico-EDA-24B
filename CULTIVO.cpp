@@ -1,7 +1,7 @@
 // Cultivo.cpp
 #include "CULTIVO.h"
 
-void Cultivo::ingresarDatos() {
+void CULTIVO::ingresarDatos() {
     cout << "Ingrese el nombre del paciente: ";
     getline(cin, nombrePaciente);
 
@@ -27,7 +27,7 @@ void Cultivo::ingresarDatos() {
     }
 }
 
-void Cultivo::mostrarDatos() const {
+void CULTIVO::mostrarDatos() const {
     cout << "Nombre del Paciente: " << nombrePaciente << endl;
     cout << "Tipo de Cultivo: " << tipoCultivo << endl;
 
@@ -37,7 +37,7 @@ void Cultivo::mostrarDatos() const {
     cout << "--------------------------" << endl;
 }
 
-void Cultivo::guardarEnArchivo(ofstream& archivo) const {
+void CULTIVO::guardarEnArchivo(ofstream& archivo) const {
     if (archivo.is_open()) {
         archivo << "Nombre del Paciente: " << nombrePaciente << endl;
         archivo << "Tipo de Cultivo: " << tipoCultivo << endl;
