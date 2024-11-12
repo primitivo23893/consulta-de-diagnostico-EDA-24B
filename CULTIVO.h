@@ -6,10 +6,10 @@
 
 using namespace std;
 
-class Ego {
+class Cultivo {
 public:
     string nombrePaciente;
-    string tipoEgo;
+    string tipoCultivo;
     map<string, string> datos;
 
     void ingresarDatos();
@@ -27,7 +27,7 @@ public:
     Nodo(T valor) : dato(valor), siguiente(nullptr) {}
 };
 
-// Clase ListaEnlazada que maneja nodos de cualquier tipo de dato (genérica)
+// Clase ListaEnlazada que maneja nodos de cualquier tipo de dato (gen�rica)
 template <typename T>
 class ListaEnlazada {
 private:
@@ -36,7 +36,7 @@ private:
 public:
     ListaEnlazada() : cabeza(nullptr) {}
 
-    // Método para agregar un nuevo elemento al final de la lista
+    // Metodo para agregar un nuevo elemento al final de la lista
     void agregar(const T& nuevoDato) {
         Nodo<T>* nuevoNodo = new Nodo<T>(nuevoDato);
         if (!cabeza) {
@@ -50,7 +50,7 @@ public:
         }
     }
 
-    // Método para mostrar todos los datos en la lista
+    // Metodo para mostrar todos los datos en la lista
     void mostrar() const {
         Nodo<T>* temp = cabeza;
         while (temp) {
@@ -59,9 +59,9 @@ public:
         }
     }
 
-    // Método para guardar todos los datos de la lista en un archivo
+    // Metodo para guardar todos los datos de la lista en un archivo
     void guardarEnArchivo() const {
-        ofstream archivo("ego_clinicos.txt", ios::app);
+        ofstream archivo("cultivos_clinicos.txt", ios::app);
         if (archivo.is_open()) {
             Nodo<T>* temp = cabeza;
             while (temp) {
@@ -69,20 +69,20 @@ public:
                 temp = temp->siguiente;
             }
             archivo.close();
-            cout << "Todos los egos se han guardado exitosamente en el archivo.\n";
+            cout << "Todos los cultivos se han guardado exitosamente en el archivo.\n";
         } else {
-            cout << "No se pudo abrir el archivo para guardar los egos.\n";
+            cout << "No se pudo abrir el archivo para guardar los cultivos.\n";
         }
     }
 };
 
-// Implementación de métodos de la clase Ego
-void Ego::ingresarDatos() {
+// Implementacion de metodos de la clase Cultivo
+void Cultivo::ingresarDatos() {
     cout << "Ingrese el nombre del paciente: ";
     getline(cin, nombrePaciente);
 
-    cout << "Ingrese el tipo de EGO: ";
-    getline(cin, tipoEgo);
+    cout << "Ingrese el tipo de cultivo: ";
+    getline(cin, tipoCultivo);
 
     while (true) {
         string atributo, valor;
@@ -95,7 +95,7 @@ void Ego::ingresarDatos() {
         datos[atributo] = valor;
 
         char opcion;
-        cout << "¿Desea agregar otro atributo? (s/n): ";
+        cout << "Desea agregar otro atributo? (s/n): ";
         cin >> opcion;
         cin.ignore(numeric_limits<streamsize>::max(), '\n');  // Limpia el buffer de entrada
 
@@ -103,9 +103,9 @@ void Ego::ingresarDatos() {
     }
 }
 
-void Ego::mostrarDatos() const {
+void Cultivo::mostrarDatos() const {
     cout << "Nombre del Paciente: " << nombrePaciente << endl;
-    cout << "Tipo de EGO: " << tipoEgo << endl;
+    cout << "Tipo de Cultivo: " << tipoCultivo << endl;
 
     for (const auto& dato : datos) {
         cout << dato.first << ": " << dato.second << endl;
@@ -113,10 +113,10 @@ void Ego::mostrarDatos() const {
     cout << "--------------------------" << endl;
 }
 
-void Ego::guardarEnArchivo(ofstream& archivo) const {
+void Cultivo::guardarEnArchivo(ofstream& archivo) const {
     if (archivo.is_open()) {
         archivo << "Nombre del Paciente: " << nombrePaciente << endl;
-        archivo << "Tipo de EGO: " << tipoEgo << endl;
+        archivo << "Tipo de Cultivo: " << tipoCultivo << endl;
         for (const auto& dato : datos) {
             archivo << dato.first << ": " << dato.second << endl;
         }
@@ -127,22 +127,23 @@ void Ego::guardarEnArchivo(ofstream& archivo) const {
 }
 
 int main() {
-    ListaEnlazada<Ego> listaEgos;
+    ListaEnlazada<Cultivo> listaCultivos;
     char opcion;
 
     do {
-        Ego nuevoEgo;
-        nuevoEgo.ingresarDatos();
-        listaEgos.agregar(nuevoEgo);
+        Cultivo nuevoCultivo;
+        nuevoCultivo.ingresarDatos();
+        listaCultivos.agregar(nuevoCultivo);
 
-        cout << "¿Desea agregar otro EGO? (s/n): ";
+        cout << "Desea agregar otro cultivo? (s/n): ";
         cin >> opcion;
         cin.ignore(numeric_limits<streamsize>::max(), '\n');  // Limpia el buffer de entrada
     } while (opcion == 's' || opcion == 'S');
 
-    cout << "\n=== Resumen de EGO ===\n";
-    listaEgos.mostrar();
-    listaEgos.guardarEnArchivo();
+    cout << "\n=== Resumen de Cultivos ===\n";
+    listaCultivos.mostrar();
+    listaCultivos.guardarEnArchivo();
 
     return 0;
 }
+
