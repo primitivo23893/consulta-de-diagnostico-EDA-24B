@@ -21,7 +21,7 @@ int folioCounter = 1; // Contador para los folios
 // Funciones de comparación sin distinción de mayúsculas y minúsculas
 bool compararSinDistincion(const string &str1, const string &str2) {
     return equal(str1.begin(), str1.end(), str2.begin(), str2.end(),
-                 [](char a, char b) { return tolower(a) == tolower(b); });
+                [](char a, char b) { return tolower(a) == tolower(b); });
 }
 
 void setNombre(Analisis& analisis) {
@@ -76,7 +76,7 @@ void consultar_analisis(int criterio_busqueda, const string& busqueda) {
         for (int i = 0; i < analisisCount; ++i) {
             if (analisisList[i].folio == folio) {
                 cout << "FOLIO: " << analisisList[i].folio << ", NOMBRE: " << analisisList[i].nombre
-                     << ", FECHA: " << analisisList[i].fecha << ", TIPO: " << analisisList[i].tipo << endl;
+                    << ", FECHA: " << analisisList[i].fecha << ", TIPO: " << analisisList[i].tipo << endl;
                 return;
             }
         }
@@ -88,7 +88,7 @@ void consultar_analisis(int criterio_busqueda, const string& busqueda) {
                 (criterio_busqueda == 3 && analisisList[i].fecha == busqueda) ||
                 (criterio_busqueda == 4 && compararSinDistincion(analisisList[i].tipo, busqueda))) {
                 cout << "FOLIO: " << analisisList[i].folio << ", NOMBRE: " << analisisList[i].nombre
-                     << ", FECHA: " << analisisList[i].fecha << ", TIPO: " << analisisList[i].tipo << endl;
+                    << ", FECHA: " << analisisList[i].fecha << ", TIPO: " << analisisList[i].tipo << endl;
                 encontrado = true;
             }
         }
@@ -235,7 +235,7 @@ void ordenar_analisis(int criterio_orden) {
     cout << "Analisis ordenados exitosamente:\n";
     for (int i = 0; i < analisisCount; ++i) {
         cout << "FOLIO: " << analisisList[i].folio << ", NOMBRE: " << analisisList[i].nombre
-             << ", FECHA: " << analisisList[i].fecha << ", TIPO: " << analisisList[i].tipo << endl;
+            << ", FECHA: " << analisisList[i].fecha << ", TIPO: " << analisisList[i].tipo << endl;
     }
 }
 

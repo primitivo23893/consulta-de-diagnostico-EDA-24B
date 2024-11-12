@@ -1,7 +1,8 @@
 #include <iostream>
+#include "menu.h"
 using namespace std;
 
 int main(){
-    cout << "Hola mundo"<< endl;
+    Menu menu;
     return 0;
 }
