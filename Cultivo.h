@@ -8,7 +8,7 @@
 
 using namespace std;
 
-class CULTIVO {
+class Cultivo {
 public:
     string nombrePaciente;
     string tipoCultivo;

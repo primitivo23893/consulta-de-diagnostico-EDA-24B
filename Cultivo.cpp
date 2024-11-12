@@ -1,7 +1,7 @@
 // Cultivo.cpp
-#include "CULTIVO.h"
+#include "Cultivo.h"
 
-void CULTIVO::ingresarDatos() {
+void Cultivo::ingresarDatos() {
     cout << "Ingrese el nombre del paciente: ";
     getline(cin, nombrePaciente);
 
@@ -21,13 +21,13 @@ void CULTIVO::ingresarDatos() {
         char opcion;
         cout << "Desea agregar otro atributo? (s/n): ";
         cin >> opcion;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.ignore();
 
         if (opcion == 'n' || opcion == 'N') break;
     }
 }
 
-void CULTIVO::mostrarDatos() const {
+void Cultivo::mostrarDatos() const {
     cout << "Nombre del Paciente: " << nombrePaciente << endl;
     cout << "Tipo de Cultivo: " << tipoCultivo << endl;
 
@@ -37,7 +37,7 @@ void CULTIVO::mostrarDatos() const {
     cout << "--------------------------" << endl;
 }
 
-void CULTIVO::guardarEnArchivo(ofstream& archivo) const {
+void Cultivo::guardarEnArchivo(ofstream& archivo) const {
     if (archivo.is_open()) {
         archivo << "Nombre del Paciente: " << nombrePaciente << endl;
         archivo << "Tipo de Cultivo: " << tipoCultivo << endl;
