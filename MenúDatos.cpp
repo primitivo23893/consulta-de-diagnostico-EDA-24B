@@ -1,4 +1,4 @@
-//hola mundo
+//hola
 #include <iostream>
 #include <string>
 #include <algorithm>
