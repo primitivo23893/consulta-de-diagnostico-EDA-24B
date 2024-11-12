@@ -1,10 +1,11 @@
+//hola mundo
 #include <iostream>
 #include <string>
 #include <algorithm>
 
 using namespace std;
 
-// Estructura para almacenar los datos de un an·lisis clÌnico
+// Estructura para almacenar los datos de un an√°lisis cl√≠nico
 struct Analisis {
     int folio;
     string nombre;
@@ -12,12 +13,12 @@ struct Analisis {
     string tipo;
 };
 
-// Lista para almacenar los an·lisis
-Analisis analisisList[100]; // Arreglo est·tico para almacenar an·lisis
-int analisisCount = 0; // Contador para la cantidad de an·lisis
+// Lista para almacenar los an√°lisis
+Analisis analisisList[100]; // Arreglo est√°tico para almacenar an√°lisis
+int analisisCount = 0; // Contador para la cantidad de an√°lisis
 int folioCounter = 1; // Contador para los folios
 
-// Funciones de comparaciÛn sin distinciÛn de may˙sculas y min˙sculas
+// Funciones de comparaci√≥n sin distinci√≥n de may√∫sculas y min√∫sculas
 bool compararSinDistincion(const string &str1, const string &str2) {
     return equal(str1.begin(), str1.end(), str2.begin(), str2.end(),
                  [](char a, char b) { return tolower(a) == tolower(b); });
@@ -45,19 +46,19 @@ void registrar_analisis() {
     }
 
     Analisis nuevoAnalisis;
-    nuevoAnalisis.folio = folioCounter++; // Generar folio autom·ticamente
+    nuevoAnalisis.folio = folioCounter++; // Generar folio autom√°ticamente
 
     setNombre(nuevoAnalisis);
     setFecha(nuevoAnalisis);
     setTipo(nuevoAnalisis);
 
     char opcion;
-    cout << "øDesea guardar el registro? (S/N): ";
+    cout << "¬øDesea guardar el registro? (S/N): ";
     cin >> opcion;
     cin.ignore(); // Limpiar el buffer de entrada
 
     if (opcion == 'S' || opcion == 's') {
-        analisisList[analisisCount++] = nuevoAnalisis; // Agregar an·lisis a la lista
+        analisisList[analisisCount++] = nuevoAnalisis; // Agregar an√°lisis a la lista
         cout << "Analisis registrado exitosamente. SU FOLIO ES: " << nuevoAnalisis.folio << endl;
     } else {
         cout << "Registro cancelado.\n";
@@ -159,7 +160,7 @@ void editar_analisis(int criterio_busqueda, const string& busqueda) {
                 setTipo(analisisList[i]);
 
                 char opcion;
-                cout << "øDesea guardar los cambios? (S/N): ";
+                cout << "¬øDesea guardar los cambios? (S/N): ";
                 cin >> opcion;
                 cin.ignore(); // Limpiar el buffer de entrada
 
@@ -183,7 +184,7 @@ void editar_analisis(int criterio_busqueda, const string& busqueda) {
                 setTipo(analisisList[i]);
 
                 char opcion;
-                cout << "øDesea guardar los cambios? (S/N): ";
+                cout << "¬øDesea guardar los cambios? (S/N): ";
                 cin >> opcion;
                 cin.ignore(); // Limpiar el buffer de entrada
 
