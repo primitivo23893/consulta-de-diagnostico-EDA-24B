@@ -5,6 +5,10 @@
 #include <string>
 
 #include "ListaEnlazada.h"
+#include "AnalisisBase.h"
+#include "EGO.h"
+#include "QS.h"
+#include "Cultivo.h"
 using namespace std;
 
 class Analisis {
