@@ -5,9 +5,12 @@
 #include <fstream>
 #include <sstream>
 
-
 Analisis::Analisis() {
     listaAnalisis = new ListaEnlazada<AnalisisBase>();
+}
+
+Analisis::~Analisis() {
+    delete listaAnalisis;
 }
 
 void Analisis::addEGO(EGO* ego) {
@@ -82,7 +85,6 @@ void Analisis::recuperarDeArchivo() {
     }
 }
 
-
 void Analisis::mostrarTodo() const {
     Nodo<AnalisisBase>* temp = listaAnalisis->getInicio();
     while (temp) {
@@ -90,7 +92,6 @@ void Analisis::mostrarTodo() const {
         temp = temp->siguiente;
     }
 }
-
 
 string Analisis::str() const {
     stringstream sout;

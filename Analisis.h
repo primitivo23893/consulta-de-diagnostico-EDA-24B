@@ -14,13 +14,14 @@ private:
 public:
 
     Analisis();
+    ~Analisis();
 
-    void addEGO();
-    void removeEGO();
-    void addQS();
-    void removeQS();
-    void addCultivo();
-    void removeCultivo();
+    void addEGO(EGO* ego);
+    void removeEGO(int pos);
+    void addQS(QS* qs);
+    void removeQS(int pos);
+    void addCultivo(Cultivo* cultivo);
+    void removeCultivo(int pos);
 
     void ordenarTipo();
     void ordenarFecha();
@@ -29,7 +30,6 @@ public:
 
     void guardarEnArchivo() const;
     void recuperarDeArchivo();
-
 
     void mostrarTodo() const;
 
