@@ -12,7 +12,7 @@
 #include "ListaEnlazada.h"
 using namespace std;
 
-class EGO {
+class EGO : public AnalisisBase {
     private:
         ListaEnlazada<Componente> componentes;
         string nombre;
@@ -34,8 +34,8 @@ class EGO {
         void removeComponente(int pos);
         void editarComponente(int pos, Componente* componente);
         
-        string str();
-        void guardarEnArchivo(ofstream& archivo) const;
+        string str() const override;
+        void guardarEnArchivo(ofstream& archivo) const override;
 
 };
 

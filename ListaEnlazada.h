@@ -2,6 +2,8 @@
 #ifndef LISTAENLAZADA_H
 #define LISTAENLAZADA_H
 
+#include "AnalisisBase.h"
+
 template <class T>
 class Nodo {
 public:
@@ -28,9 +30,9 @@ public:
     void mostrar() const;
     bool estaVacia() const;
     int getTamano() const;
-
+    Nodo<T>* obtenerEnPosicion(int pos) const;
+    Nodo<T>* getInicio() const;
     void guardarEnArchivo() const;
 };
-
 
 #endif // LISTAENLAZADA_H

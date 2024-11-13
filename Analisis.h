@@ -4,12 +4,13 @@
 #include <iostream>
 #include <string>
 
+#include "ListaEnlazada.h"
 using namespace std;
 
 class Analisis {
 
 private:
-
+    ListaEnlazada<AnalisisBase>* listaAnalisis;
 public:
 
     Analisis();

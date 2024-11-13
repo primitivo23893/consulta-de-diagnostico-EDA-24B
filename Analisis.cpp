@@ -1,34 +1,37 @@
 #include "Analisis.h"
+#include "EGO.h"
+#include "QS.h"
+#include "Cultivo.h"
 #include <fstream>
 #include <sstream>
 
 
-Analisis :: Analisis() {
-
+Analisis::Analisis() {
+    listaAnalisis = new ListaEnlazada<AnalisisBase>();
 }
 
-void Analisis::addEGO() {
-
+void Analisis::addEGO(EGO* ego) {
+    listaAnalisis->agregarFinal(ego);
 }
 
-void Analisis::removeEGO() {
-
+void Analisis::removeEGO(int pos) {
+    listaAnalisis->eliminarPosicion(pos);
 }
 
-void Analisis::addQS() {
-
+void Analisis::addQS(QS* qs) {
+    listaAnalisis->agregarFinal(qs);
 }
 
-void Analisis::removeQS() {
-
+void Analisis::removeQS(int pos) {
+    listaAnalisis->eliminarPosicion(pos);
 }
 
-void Analisis::addCultivo() {
-
+void Analisis::addCultivo(Cultivo* cultivo) {
+    listaAnalisis->agregarFinal(cultivo);
 }
 
-void Analisis::removeCultivo() {
-
+void Analisis::removeCultivo(int pos) {
+    listaAnalisis->eliminarPosicion(pos);
 }
 
 // Métodos de ordenamiento
@@ -54,7 +57,11 @@ void Analisis::ordenarAlfabeto() {
 void Analisis::guardarEnArchivo() const {
     ofstream archivo("analisis_clinicos.txt", ios::app);
     if (archivo.is_open()) {
-        archivo << str();
+        Nodo<AnalisisBase>* temp = listaAnalisis->getInicio();
+        while (temp) {
+            temp->dato->guardarEnArchivo(archivo);
+            temp = temp->siguiente;
+        }
         archivo.close();
         cout << "Datos guardados en el archivo correctamente.\n";
     } else {
@@ -77,7 +84,11 @@ void Analisis::recuperarDeArchivo() {
 
 
 void Analisis::mostrarTodo() const {
-    cout << str();
+    Nodo<AnalisisBase>* temp = listaAnalisis->getInicio();
+    while (temp) {
+        cout << temp->dato->str() << endl;
+        temp = temp->siguiente;
+    }
 }
 
 

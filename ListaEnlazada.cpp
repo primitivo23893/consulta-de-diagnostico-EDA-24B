@@ -107,6 +107,27 @@ template <class T>
 int ListaEnlazada<T>::getTamano() const {
     return tamano;
 }
+
+template <class T>
+Nodo<T>* ListaEnlazada<T>::obtenerEnPosicion(int pos) const {
+    if (pos < 0 || pos >= tamano) {
+        return nullptr; // Posición inválida
+    }
+
+    Nodo<T>* actual = inicio;
+    for (int i = 0; i < pos; ++i) {
+        actual = actual->siguiente;
+    }
+
+    return actual;
+}
+
+template <typename T>
+Nodo<T>* ListaEnlazada<T>::getInicio() const {
+
+    return inicio;
+}
+
 template <typename T>
 void ListaEnlazada<T>::guardarEnArchivo() const {
     ofstream archivo("analisi_clinicos.txt", ios::app);
