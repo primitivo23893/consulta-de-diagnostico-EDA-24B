@@ -9,7 +9,7 @@
 
 #include "AnalisisBase.h"
 #include "Componente.h"
-#include "ListaEnlazada.h"
+
 using namespace std;
 
 class QS : public AnalisisBase {
