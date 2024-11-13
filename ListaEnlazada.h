@@ -2,24 +2,35 @@
 #ifndef LISTAENLAZADA_H
 #define LISTAENLAZADA_H
 
-#include "Nodo.h"
-#include <iostream>
-#include <fstream>
+template <class T>
+class Nodo {
+public:
+    T* dato;
+    Nodo<T>* siguiente;
+    
+    Nodo(T* val) : dato(val), siguiente(nullptr) {}
+};
 
-using namespace std;
-
-template <typename T>
+template <class T>
 class ListaEnlazada {
 private:
-    Nodo<T>* cabeza;
+    Nodo<T>* inicio;
+    int tamano;
 
 public:
     ListaEnlazada();
-    void agregar(const T& nuevoDato);
+    ~ListaEnlazada();
+    void agregarInicio(T* valor);
+    void agregarFinal(T* valor);
+    bool eliminarInicio();
+    bool eliminarFinal();
+    bool eliminarPosicion(int pos);
     void mostrar() const;
+    bool estaVacia() const;
+    int getTamano() const;
+
     void guardarEnArchivo() const;
 };
 
-#include "ListaEnlazada.cpp"  // Incluir la implementación
 
 #endif // LISTAENLAZADA_H

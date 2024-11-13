@@ -1,38 +1,115 @@
-// ListaEnlazada.cpp
-#ifndef LISTAENLAZADA_CPP
-#define LISTAENLAZADA_CPP
-
+//ListaEnlazada.cpp
 #include "ListaEnlazada.h"
 
-template <typename T>
-ListaEnlazada<T>::ListaEnlazada() : cabeza(nullptr) {}
+template <class T>
+ListaEnlazada<T>::ListaEnlazada() : inicio(nullptr), tamano(0) {}
 
-template <typename T>
-void ListaEnlazada<T>::agregar(const T& nuevoDato) {
-    Nodo<T>* nuevoNodo = new Nodo<T>(nuevoDato);
-    if (!cabeza) {
-        cabeza = nuevoNodo;
-    } else {
-        Nodo<T>* temp = cabeza;
-        while (temp->siguiente) {
-            temp = temp->siguiente;
-        }
-        temp->siguiente = nuevoNodo;
+template <class T>
+ListaEnlazada<T>::~ListaEnlazada() {
+    while(inicio != nullptr) {
+        Nodo<T>* temp = inicio;
+        inicio = inicio->siguiente;
+        delete temp;
     }
 }
 
-template <typename T>
+template <class T>
+void ListaEnlazada<T>::agregarInicio(T* valor) {
+    Nodo<T>* nuevo = new Nodo<T>(valor);
+    nuevo->siguiente = inicio;
+    inicio = nuevo;
+    tamano++;
+}
+
+template <class T>
+void ListaEnlazada<T>::agregarFinal(T* valor) {
+    Nodo<T>* nuevo = new Nodo<T>(valor);
+    
+    if (inicio == nullptr) {
+        inicio = nuevo;
+    } else {
+        Nodo<T>* temp = inicio;
+        while (temp->siguiente != nullptr) {
+            temp = temp->siguiente;
+        }
+        temp->siguiente = nuevo;
+    }
+    tamano++;
+}
+
+template <class T>
+bool ListaEnlazada<T>::eliminarInicio() {
+    if (inicio == nullptr) return false;
+    
+    Nodo<T>* temp = inicio;
+    inicio = inicio->siguiente;
+    delete temp;
+    tamano--;
+    return true;
+}
+
+template <class T>
+bool ListaEnlazada<T>::eliminarFinal() {
+    if (inicio == nullptr) return false;
+    
+    if (inicio->siguiente == nullptr) {
+        delete inicio;
+        inicio = nullptr;
+        tamano--;
+        return true;
+    }
+    
+    Nodo<T>* temp = inicio;
+    while (temp->siguiente->siguiente != nullptr) {
+        temp = temp->siguiente;
+    }
+    
+    delete temp->siguiente;
+    temp->siguiente = nullptr;
+    tamano--;
+    return true;
+}
+
+template <class T>
+bool ListaEnlazada<T>::eliminarPosicion(int pos) {
+    if (pos < 0 || pos >= tamano || inicio == nullptr) return false;
+    
+    if (pos == 0) return eliminarInicio();
+    
+    Nodo<T>* temp = inicio;
+    for (int i = 0; i < pos-1; i++) {
+        temp = temp->siguiente;
+    }
+    
+    Nodo<T>* eliminar = temp->siguiente;
+    temp->siguiente = eliminar->siguiente;
+    delete eliminar;
+    tamano--;
+    return true;
+}
+
+template <class T>
 void ListaEnlazada<T>::mostrar() const {
-    Nodo<T>* temp = cabeza;
-    while (temp) {
-        temp->dato.mostrarDatos();
+    Nodo<T>* temp = inicio;
+    while (temp != nullptr) {
+        cout << "Nombre: " << temp->dato->getNombre() 
+            << ", Descripcion: " << temp->dato->getDescripcion() << endl;
         temp = temp->siguiente;
     }
 }
 
+template <class T>
+bool ListaEnlazada<T>::estaVacia() const {
+    return inicio == nullptr;
+}
+
+template <class T>
+int ListaEnlazada<T>::getTamano() const {
+    return tamano;
+}
 template <typename T>
 void ListaEnlazada<T>::guardarEnArchivo() const {
-    ofstream archivo("cultivos_clinicos.txt", ios::app);
+    ofstream archivo("analisi_clinicos.txt", ios::app);
     if (archivo.is_open()) {
         Nodo<T>* temp = cabeza;
         while (temp) {
@@ -40,10 +117,10 @@ void ListaEnlazada<T>::guardarEnArchivo() const {
             temp = temp->siguiente;
         }
         archivo.close();
-        cout << "Todos los cultivos se han guardado exitosamente en el archivo.\n";
+        cout << "Guardado exitosamente en el archivo.\n";
     } else {
-        cout << "No se pudo abrir el archivo para guardar los cultivos.\n";
+        cout << "No se pudo abrir el archivo para guardar.\n";
     }
 }
 
-#endif // LISTAENLAZADA_CPP
+
