@@ -1,6 +1,7 @@
 #include "menu.h"
-#include "Analisis.h"
-//#include "Cultivo.h"
+#include "EGO.h"
+#include "QS.h"
+#include "Cultivo.h"
 
 #include <iostream>
 using namespace std;
@@ -11,14 +12,15 @@ using namespace std;
 #define CLEAR "clear"  // Comando para limpiar pantalla en otros SO
 #endif
 
-void registroAnalisis();
-void consultarAnalisis();
+void registroAnalisis(Menu& menu);
+void consultarAnalisis(Menu& menu);
 void editarAnalisis();
 void eliminarAnalisis();
 void ordenarAnalisis();
-void registroEgo();
-void registroQS();
-void registroCultivo();
+void registroEgo(Menu& menu);
+void registroQS(Menu& menu);
+void registroCultivo(Menu& menu);
+void agregarComponente(AnalisisBase& analisisBase);
 void mostrarMenu();
 
 Menu::Menu() {
@@ -34,10 +36,11 @@ Menu::Menu() {
 
         switch (opc) {
         case 1:
-            registroAnalisis();
+            registroAnalisis(*this);
             break;
         case 2:
-            consultarAnalisis();
+            consultarAnalisis(*this);
+            cin.get();
             break;
         case 3:
             editarAnalisis();
@@ -77,14 +80,14 @@ void Menu::setFolio(int folio) {
     folioGlobal = folio;
 }
 
-// Función para registrar un nuevo análisis de cultivo
-void registroAnalisis() {
+AnalisisBase Menu::getAnalisisBase() {
+    return analisisBase;
+}
+
+void registroAnalisis(Menu& menu) {
     int opc;
-    string nombre;
-    string fecha;
     bool seguir = true;
-    do
-    {
+    do {
         cout << "Selecciona el tipo de análisis a registrar:" << endl;
         cout << "1. EGO" << endl;
         cout << "2. QS" << endl;
@@ -93,101 +96,118 @@ void registroAnalisis() {
         cin.ignore();
         if(opc != 1 && opc != 2 && opc != 3){
             cout << "Opción no válida. Intente nuevamente." << endl;
-        }
-        else
-        {
+        } else {
             seguir = false;
         }
     } while (seguir);
-    switch (opc)
-    {
+
+    switch (opc) {
     case 1:
-        registroEgo();
+        registroEgo(menu);
         break;
     case 2:
-        registroAnalisis();
+        registroQS(menu);
         break;
     case 3:
-        registroCultivo();
+        registroCultivo(menu);
         break;
     default:
         break;
     }
-    cout << "Registro de análisis completado para " << nombre << "." << endl;
 }
 
-// Función para consultar análisis
-void consultarAnalisis() {
+void registroEgo(Menu& menu) {
+    string nombre;
+    string fecha;
+    cout << "Registrando análisis de EGO..." << endl;
+    cout << "Nombre del paciente: ";
+    getline(cin, nombre);
+    cout << "Fecha de realización: ";
+    getline(cin, fecha);
+
+    EGO* ego = new EGO();
+    ego->setNombre(nombre);
+    ego->setFecha(fecha);
+    ego->setFolio(menu.getFolio());
+    menu.incrementarFolio();
+    agregarComponente(*ego);
+    menu.getAnalisisBase().addAnalisis(ego);
+}
+
+void registroQS(Menu& menu) {
+    string nombre;
+    string fecha;
+    cout << "Registrando análisis de QS..." << endl;
+    cout << "Nombre del paciente: ";
+    getline(cin, nombre);
+    cout << "Fecha de realización: ";
+    getline(cin, fecha);
+
+    QS* qs = new QS();
+    qs->setNombre(nombre);
+    qs->setFecha(fecha);
+    qs->setFolio(menu.getFolio());
+    menu.incrementarFolio();
+    
+    agregarComponente(*qs);
+    menu.getAnalisisBase().addAnalisis(qs);
+}
+
+void registroCultivo(Menu& menu) {
+    string nombre;
+    string fecha;
+    cout << "Registrando análisis de Cultivo..." << endl;
+    cout << "Nombre del paciente: ";
+    getline(cin, nombre);
+    cout << "Fecha de realización: ";
+    getline(cin, fecha);
+
+    Cultivo* cultivo = new Cultivo();
+    cultivo->setNombre(nombre);
+    cultivo->setFecha(fecha);
+    cultivo->setFolio(menu.getFolio());
+    menu.incrementarFolio();
+    agregarComponente(*cultivo);
+    menu.getAnalisisBase().addAnalisis(cultivo);
+}
+void agregarComponente(AnalisisBase& analisisBase){
+    string nombre;
+    string valor;
+    string rango;
+    char opc;
+    do{
+        cout << "Nombre del componente: ";
+        getline(cin, nombre);
+        cout << "Valor del componente: ";
+        getline(cin, valor);
+        cout << "Rango del componente: ";
+        getline(cin, rango);
+        analisisBase.addComponente(new Componente(nombre, valor, rango));
+        cout << "¿Desea agregar otro componente? (s/n): ";
+        cin >> opc;
+        cin.ignore();
+    } while(opc == 's' || opc == 'S');
+}
+void consultarAnalisis(Menu& menu) {
     cout << "Consultando análisis..." << endl;
-    // Agregar aquí la lógica para consultar los análisis
+    cout << menu.getAnalisisBase().mostrarTodo();
 }
 
-// Función para editar un análisis existente
 void editarAnalisis() {
     cout << "Editando análisis..." << endl;
     // Agregar aquí la lógica para editar un análisis
 }
 
-// Función para eliminar un análisis
 void eliminarAnalisis() {
     cout << "Eliminando análisis..." << endl;
     // Agregar aquí la lógica para eliminar un análisis
 }
 
-// Función para ordenar análisis
 void ordenarAnalisis() {
     cout << "Ordenando análisis..." << endl;
     // Agregar aquí la lógica para ordenar los análisis
 }
-void registroEgo(){
-    cout << "Registrando análisis de EGO..." << endl;
-    cout << "Nombre del paciente: ";
-    string nombre;
-    getline(cin, nombre);
-    cout << "Fecha de realización: ";
-    string fecha;
-    getline(cin, fecha);
 
-    EGO ego;
-    ego.setNombre(nombre);
-    ego.setFecha(fecha);
-    ego.setTipo("EGO");
-    ego.setFolio(Menu().getFolio());
-    Menu().incrementarFolio();
-}
-void registroQS(){
-    cout << "Registrando análisis de QS..." << endl;
-    cout << "Nombre del paciente: ";
-    string nombre;
-    getline(cin, nombre);
-    cout << "Fecha de realización: ";
-    string fecha;
-    getline(cin, fecha);
-
-    QS qs;
-    qs.setNombre(nombre);
-    qs.setFecha(fecha);
-    qs.setTipo("QS");
-    qs.setFolio(Menu().getFolio());
-    Menu().incrementarFolio();
-}
-void registroCultivo(){
-    cout << "Registrando análisis de Cultivo..." << endl;
-    cout << "Nombre del paciente: ";
-    string nombre;
-    getline(cin, nombre);
-    cout << "Fecha de realización: ";
-    string fecha;
-    getline(cin, fecha);
-
-    Cultivo cultivo;
-    cultivo.setNombre(nombre);
-    cultivo.setFecha(fecha);
-    cultivo.setTipo("Cultivo");
-    cultivo.setFolio(Menu().getFolio());
-    Menu().incrementarFolio();
-}
-// Función para mostrar el menú principal
 void mostrarMenu() {
     cout << "=== Menú Principal ===" << endl;
     cout << "1. Registrar análisis" << endl;

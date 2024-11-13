@@ -4,6 +4,9 @@
 
 using namespace std;
 
+Componente::Componente(string nombre, string valor, string rango)
+    :nombre(nombre), valor(valor), rango(rango) {}
+
 void Componente::setNombre(const string& nuevoNombre) {
     nombre = nuevoNombre;
 }

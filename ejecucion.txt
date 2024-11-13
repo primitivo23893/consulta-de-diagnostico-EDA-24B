@@ -1,5 +1,5 @@
 <Windows>
-g++ main.cpp menu.cpp Analisis.cpp Componente.cpp Cultivo.cpp EGO.cpp QS.cpp ListaEnlazada.cpp -o main
+g++ main.cpp menu.cpp AnalisisBase.cpp Componente.cpp Cultivo.cpp EGO.cpp QS.cpp -o main
 .\main.exe
 
 <Linux>

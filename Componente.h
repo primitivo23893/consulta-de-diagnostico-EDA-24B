@@ -13,6 +13,7 @@ private:
     string rango;
 
 public:
+    Componente(string nombre, string valor, string rango);
     void setNombre(const string& nuevoNombre);
     void setValor(const string& nuevoValor);
     void setRango(const string& nuevoRango);

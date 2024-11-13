@@ -14,28 +14,9 @@ using namespace std;
 
 class QS : public AnalisisBase {
     private:
-        ListaEnlazada<Componente> componentes;
-        string nombre;
-        int folio;
-        string fecha;
-        string tipo;
+
     public:
         QS();
-        void setNombre(const string& _nombre);
-        string getNombre() const;
-        void setFolio(int _folio);
-        int getFolio() const;
-        void setFecha(const string& _fecha);
-        string getFecha() const;
-        void setTipo(const string& _tipo);
-        string getTipo() const;
-
-        void addComponente(Componente* componente);
-        void removeComponente(int pos);
-        void editarComponente(int pos, Componente* componente);
-        
-        string str() const override;
-        void guardarEnArchivo(ofstream& archivo) const override;
 
 };
 
