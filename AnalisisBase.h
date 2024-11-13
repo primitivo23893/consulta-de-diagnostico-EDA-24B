@@ -2,7 +2,7 @@
 #define ANALISISBASE_H
 
 #include <bits/stdc++.h>
-
+#include <iomanip>
 #include "Componente.h"
 
 
@@ -45,8 +45,15 @@ public:
     int buscarPorFolio(int folio) const;
     string mostrarPorFolio(int folio) const;
     void removeAnalisis(int pos);
+    void editarAnalisis(int pos, AnalisisBase* analisis);
+    AnalisisBase* getAnalisis(int pos) const;
     // string str() const override;
     // void guardarEnArchivo(ofstream& archivo) const override;
+    vector<Componente> getComponentes() const;
+
+    string ordenarNombre()const;
+    string ordenarFecha()const;
+    string ordenarTipo()const;
 };
 
 #endif // ANALISISBASE_H

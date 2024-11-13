@@ -14,7 +14,7 @@ using namespace std;
 
 void registroAnalisis(Menu& menu);
 void consultarAnalisis(Menu& menu);
-void editarAnalisis();
+void editarAnalisis(Menu& menu);
 void eliminarAnalisis(Menu& menu);
 void ordenarAnalisis(Menu& menu);
 void registroEgo(Menu& menu);
@@ -22,12 +22,12 @@ void registroQS(Menu& menu);
 void registroCultivo(Menu& menu);
 void agregarComponente(AnalisisBase& analisisBase);
 void mostrarMenu();
-
+void a(Menu& menu);
 Menu::Menu() {
     folioGlobal = 1;
     bool seguir = true;
     int opc;
-
+    a(*this);
     do {
         system(CLEAR); // Borra toda la pantalla
         mostrarMenu();
@@ -40,10 +40,10 @@ Menu::Menu() {
             break;
         case 2:
             consultarAnalisis(*this);
-            cin.get();
+            
             break;
         case 3:
-            editarAnalisis();
+            editarAnalisis(*this);
             break;
         case 4:
             eliminarAnalisis(*this);
@@ -194,17 +194,128 @@ void agregarComponente(AnalisisBase& analisisBase){
 }
 void consultarAnalisis(Menu& menu) {
     int folio;
+    system(CLEAR);
     cout << ">> Consultar analisis<<" << endl;
     cout << "Ingrese el folio del analisis a consultar: " << endl;
     cin >> folio;
     cin.ignore();
+    int pos = menu.getAnalisisBase().buscarPorFolio(folio);
+    if (pos == -1) {
+        cout << "No se encontró el análisis con el folio proporcionado." << endl;
+    } else {
+        cout << "Análisis encontrado: " << endl;
+        cout << menu.getAnalisisBase().mostrarPorFolio(folio);
+    }
     
 
 }
 
-void editarAnalisis() {
-    cout << "Editando análisis..." << endl;
-    // Agregar aquí la lógica para editar un análisis
+void editarAnalisis(Menu& menu) {
+    system(CLEAR);
+    cout << ">> Editar Analisis <<" << endl;
+    cout << "Ingrese el folio del análisis a editar: ";
+    int folio;
+    cin >> folio;
+    cin.ignore();
+    int pos = menu.getAnalisisBase().buscarPorFolio(folio);
+    if (pos == -1) {
+        cout << "No se encontró el análisis con el folio proporcionado." << endl;
+        return;
+    } else {
+        system(CLEAR);
+        cout << "Análisis encontrado: " << endl;
+        cout << menu.getAnalisisBase().mostrarPorFolio(folio);
+        auto ayuda = &menu.getAnalisisBase();
+        cout << "\n¿Qué desea editar?" << endl;
+        cout << "1. Editar análisis" << endl;
+        cout << "2. Editar componente" << endl;
+        cout << "3. Cancelar" << endl;
+        cout << "Seleccione una opción: ";
+        int opc;
+        cin >> opc;
+        cin.ignore();
+        if (opc == 1) {
+            string nombre;
+            string fecha;
+            string tipo;
+            system(CLEAR);
+            cout << "Analisis a Editar" << endl;
+            cout << menu.getAnalisisBase().mostrarPorFolio(folio);
+            // Guardar los datos anteriores
+            AnalisisBase* analisis = menu.getAnalisisBase().getAnalisis(pos);
+            string nombreAnterior = analisis->getNombre();
+            string fechaAnterior = analisis->getFecha();
+            string tipoAnterior = analisis->getTipo();
+            cout << "Este es el valor antiguo de nombre: " << nombreAnterior << endl;
+            cout << "Este es el valor antiguo de fecha: " << fechaAnterior << endl;
+            cout << "Este es el valor antiguo de tipo: " << tipoAnterior << endl;
+
+            // Editar los datos
+            cout << "Ingrese los nuevos datos del análisis:" << endl;
+            cout << "\t\t\t\t\tNota: Si no desea editar un campo, coloque -1." << endl;
+            cout << endl << "Nuevo nombre: ";
+            getline(cin, nombre);
+            cout << "Fecha de realización: ";
+            getline(cin, fecha);
+            cout << "Nuevo tipo (EGO, QS, Cultivo): ";
+            getline(cin, tipo);
+
+            // Crear un nuevo análisis
+            AnalisisBase* nuevoAnalisis = new AnalisisBase();
+            // Editar los datos
+            if (nombre == "-1") {
+                nuevoAnalisis->setNombre(nombreAnterior);
+            } else {
+                nuevoAnalisis->setNombre(nombre);
+            }
+
+            if (fecha == "-1") {
+                nuevoAnalisis->setFecha(fechaAnterior);
+            } else {
+                nuevoAnalisis->setFecha(fecha);
+            }
+
+            if (tipo == "-1") {
+                nuevoAnalisis->setTipo(tipoAnterior);
+            } else {
+                nuevoAnalisis->setTipo(tipo);
+            }
+            nuevoAnalisis->setFolio(folio);
+
+            // Copiar los componentes del análisis anterior al nuevo
+            for (const auto& componente : analisis->getComponentes()) {
+                nuevoAnalisis->addComponente(new Componente(componente));
+            }
+
+            menu.getAnalisisBase().editarAnalisis(pos, nuevoAnalisis);
+
+            cout << "Análisis editado correctamente." << endl;
+        } else if (opc == 2) {
+            cout << "Ingrese el nombre del componente a editar: ";
+            string nombre;
+            getline(cin, nombre);
+            int posComponente = menu.getAnalisisBase().buscarComponentePorNombre(nombre);
+            if (posComponente == -1) {
+                cout << "No se encontró el componente con el nombre proporcionado." << endl;
+                return;
+            }
+            cout << "Componente encontrado: " << endl;
+            cout << menu.getAnalisisBase().mostrarComponente(posComponente);
+            cout << "Ingrese el nuevo nombre del componente: ";
+            string nombreNuevo;
+            getline(cin, nombreNuevo);
+            cout << "Ingrese el nuevo valor del componente: ";
+            string valorNuevo;
+            getline(cin, valorNuevo);
+            cout << "Ingrese el nuevo rango del componente: ";
+            string rangoNuevo;
+            getline(cin, rangoNuevo);
+            menu.getAnalisisBase().editarComponente(posComponente, new Componente(nombreNuevo, valorNuevo, rangoNuevo));
+            cout << "Componente editado correctamente." << endl;
+        } else {
+            cout << "Operación cancelada." << endl;
+        }
+    }
 }
 
 void eliminarAnalisis(Menu& menu) {
@@ -299,12 +410,18 @@ void ordenarAnalisis(Menu& menu) {
     switch (opcion) {
     case 1:
         // Ordenar por nombre
+        cout << "Analisis ordenados por nombre: " << endl;
+        cout << menu.getAnalisisBase().ordenarNombre();
         break;
     case 2:
         // Ordenar por fecha
+        cout << "Analisis ordenados por fecha: " << endl;
+        cout << menu.getAnalisisBase().ordenarFecha();
         break;
     case 3:
         // Ordenar por tipo
+        cout << "Analisis ordenados por tipo: " << endl;
+        cout << menu.getAnalisisBase().ordenarTipo();
         break;
     case 4:
         // Ordenar por folio
@@ -326,4 +443,77 @@ void mostrarMenu() {
     cout << "5. Ordenar análisis" << endl;
     cout << "6. Salir" << endl;
     cout << "Seleccione una opción: ";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void a(Menu& menu) {
+    
+    vector<string> nombres = {"Juan Perez", "Maria Lopez", "Carlos Sanchez", "Ana Gomez", "Luis Fernandez"};
+    vector<string> fechas = {"2023-10-01", "2023-10-02", "2023-10-03", "2023-10-04", "2023-10-05"};
+    
+    for (int i = 0; i < 5; ++i) {
+        string nombre = nombres[i];
+        string fecha = fechas[i];
+        string tipo;
+        
+        if (i % 3 == 0) {
+            tipo = "EGO";
+            EGO* ego = new EGO();
+            ego->setNombre(nombre);
+            ego->setFecha(fecha);
+            ego->setFolio(menu.getFolio());
+            menu.incrementarFolio();
+            ego->addComponente(new Componente("Glucosa", "90 mg/dL", "70-100 mg/dL"));
+            ego->addComponente(new Componente("Proteínas", "Negativo", "Negativo"));
+            menu.getAnalisisBase().addAnalisis(ego);
+        } else if (i % 3 == 1) {
+            tipo = "QS";
+            QS* qs = new QS();
+            qs->setNombre(nombre);
+            qs->setFecha(fecha);
+            qs->setFolio(menu.getFolio());
+            menu.incrementarFolio();
+            qs->addComponente(new Componente("Colesterol", "180 mg/dL", "125-200 mg/dL"));
+            qs->addComponente(new Componente("Triglicéridos", "150 mg/dL", "50-150 mg/dL"));
+            menu.getAnalisisBase().addAnalisis(qs);
+        } else {
+            tipo = "Cultivo";
+            Cultivo* cultivo = new Cultivo();
+            cultivo->setNombre(nombre);
+            cultivo->setFecha(fecha);
+            cultivo->setFolio(menu.getFolio());
+            menu.incrementarFolio();
+            cultivo->addComponente(new Componente("Bacterias", "Positivo", "Negativo"));
+            cultivo->addComponente(new Componente("Leucocitos", "10 /µL", "0-5 /µL"));
+            menu.getAnalisisBase().addAnalisis(cultivo);
+        }
+    }
 }
