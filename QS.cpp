@@ -30,7 +30,7 @@ void QS::setTipo(const string& _tipo) {
 string QS::getTipo() const {
     return tipo;
 }
-string QS::str() {
+string QS::str() const {
     stringstream sout;
     sout << "Nombre: " << nombre << "\nFolio: " << folio << "\nFecha: " << fecha << "\nTipo: " << tipo;
     return sout.str();

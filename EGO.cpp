@@ -30,7 +30,7 @@ void EGO::setTipo(const string& _tipo) {
 string EGO::getTipo() const {
     return tipo;
 }
-string EGO::str() {
+string EGO::str() const {
     stringstream sout;
     sout << "Nombre: " << nombre << "\nFolio: " << folio << "\nFecha: " << fecha << "\nTipo: " << tipo;
     return sout.str();

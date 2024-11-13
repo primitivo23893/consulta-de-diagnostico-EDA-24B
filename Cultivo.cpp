@@ -39,7 +39,7 @@ string Cultivo::getTipo() const {
     return tipo;
 }
 
-string Cultivo::str() {
+string Cultivo::str() const {
     stringstream sout;
     sout << "Nombre: " << nombre << "\nFolio: " << folio << "\nFecha: " << fecha << "\nTipo: " << tipo;
     return sout.str();
