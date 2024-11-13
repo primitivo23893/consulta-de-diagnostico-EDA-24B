@@ -132,7 +132,7 @@ template <typename T>
 void ListaEnlazada<T>::guardarEnArchivo() const {
     ofstream archivo("analisi_clinicos.txt", ios::app);
     if (archivo.is_open()) {
-        Nodo<T>* temp = cabeza;
+        Nodo<T>* temp = inicio;
         while (temp) {
             temp->dato.guardarEnArchivo(archivo);
             temp = temp->siguiente;

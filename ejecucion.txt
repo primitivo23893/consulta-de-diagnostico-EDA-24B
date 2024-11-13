@@ -1,7 +1,6 @@
 <Windows>
-g++ main.cpp menu.cpp -o main.exe
+g++ main.cpp menu.cpp Analisis.cpp Componente.cpp Cultivo.cpp EGO.cpp QS.cpp ListaEnlazada.cpp -o main
 .\main.exe
 
 <Linux>
-g++ main.cpp menu.cpp -o main
 ./main

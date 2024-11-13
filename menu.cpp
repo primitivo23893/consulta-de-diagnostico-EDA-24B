@@ -1,5 +1,5 @@
 #include "menu.h"
-#include <Analisis.h>
+#include "Analisis.h"
 //#include "Cultivo.h"
 
 #include <iostream>
@@ -113,14 +113,6 @@ void registroAnalisis() {
     default:
         break;
     }
-
-   // Cultivo cultivo;
-    string nombre;
-
-    cout << "Dame tu nombre: ";
-    getline(cin, nombre);
-
-    // Aquí puedes agregar más lógica para el registro del cultivo
     cout << "Registro de análisis completado para " << nombre << "." << endl;
 }
 
