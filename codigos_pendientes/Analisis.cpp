@@ -1,7 +1,5 @@
 #include "Analisis.h"
-#include "EGO.h"
-#include "QS.h"
-#include "Cultivo.h"
+
 #include <fstream>
 #include <sstream>
 

@@ -54,12 +54,38 @@ void AnalisisBase::editarComponente(int pos, Componente* componente) {
 
     componentes[pos] = *componente;
 }
+int AnalisisBase::buscarComponentePorNombre(string& _nombre) {
+    int pos = 0;
+    cout<< "Componentes.size() es: " << componentes.size() << endl;
+    for(const auto& componente : componentes){
+        cout << componente.getNombre() << endl;
+        if(componente.getNombre() == _nombre){
+            return pos;
+        }
+        pos++;
+    }
+    // for (int i = 0; i < componentes.size(); i++) {
+    //         cout << componentes[i].str() << endl;
+    //     if (componentes[i].getNombre() == nombre) {
+    //         return i;
+    //     }
+    // }
+    return -1;
+}
+string AnalisisBase::mostrarComponente(int pos) {
+    if (pos < 0 || pos >= componentes.size()) {
+        return "Posición inválida";
+    }
+    return componentes[pos].str();
+}
 
 string AnalisisBase::str() {
     stringstream sout;
-    sout << "Nombre: " << nombre << "\nFolio: " << folio << "\nFecha: " << fecha << "\nTipo: " << tipo;
+    sout << "\nNombre: " << nombre << "\tFolio: " << folio << "\tFecha: " << fecha << "\tTipo: " << tipo;
+    sout << "\nComponentes: ";
+    sout << "\nNombre\tValor\t\tRango\n";
     for (const auto& componente : componentes) {
-        sout << componente.str() << endl;
+        sout <<componente.str() << endl;
     }
     return sout.str();
 }
@@ -72,6 +98,27 @@ string AnalisisBase::mostrarTodo()const{
 }
 void AnalisisBase::addAnalisis(AnalisisBase* analisis) {
     AnalisisBase::analisis.push_back(analisis);
+}
+int AnalisisBase::getTamanoAnalisis(AnalisisBase* analisis) const {
+    return AnalisisBase::analisis.size();
+}
+int AnalisisBase::buscarPorFolio(int folio) const {
+    for (int i = 0; i < AnalisisBase::analisis.size(); i++) {
+        if (AnalisisBase::analisis[i]->getFolio() == folio) {
+            return i;
+        }
+    }
+    return -1;
+}
+string AnalisisBase::mostrarPorFolio(int folio) const {
+    int pos = buscarPorFolio(folio);
+    if (pos == -1) {
+        return "No se encontró el análisis con el folio proporcionado.";
+    }
+    return AnalisisBase::analisis[pos]->str();
+}
+void AnalisisBase::removeAnalisis(int pos) {
+    AnalisisBase::analisis.erase(AnalisisBase::analisis.begin() + pos);
 }
 // void AnalisisBase::guardarEnArchivo(ofstream& archivo) const {
 //     if (archivo.is_open()) {

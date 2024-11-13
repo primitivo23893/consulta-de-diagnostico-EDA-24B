@@ -12,7 +12,7 @@ class Menu
         int getFolio();
         void setFolio(int folio);
         void incrementarFolio();
-        AnalisisBase getAnalisisBase();
+        AnalisisBase& getAnalisisBase();
     protected:
 
 };

@@ -15,8 +15,8 @@ using namespace std;
 void registroAnalisis(Menu& menu);
 void consultarAnalisis(Menu& menu);
 void editarAnalisis();
-void eliminarAnalisis();
-void ordenarAnalisis();
+void eliminarAnalisis(Menu& menu);
+void ordenarAnalisis(Menu& menu);
 void registroEgo(Menu& menu);
 void registroQS(Menu& menu);
 void registroCultivo(Menu& menu);
@@ -46,10 +46,10 @@ Menu::Menu() {
             editarAnalisis();
             break;
         case 4:
-            eliminarAnalisis();
+            eliminarAnalisis(*this);
             break;
         case 5:
-            ordenarAnalisis();
+            ordenarAnalisis(*this);
             break;
         case 6:
             seguir = false;  // Termina el programa
@@ -80,7 +80,7 @@ void Menu::setFolio(int folio) {
     folioGlobal = folio;
 }
 
-AnalisisBase Menu::getAnalisisBase() {
+AnalisisBase& Menu::getAnalisisBase() {
     return analisisBase;
 }
 
@@ -88,10 +88,13 @@ void registroAnalisis(Menu& menu) {
     int opc;
     bool seguir = true;
     do {
+        system(CLEAR);
+        cout << ">> Registro de Análisis <<" << endl;
         cout << "Selecciona el tipo de análisis a registrar:" << endl;
         cout << "1. EGO" << endl;
         cout << "2. QS" << endl;
         cout << "3. Cultivo" << endl;
+        cout << "\nSeleccione una opción: ";
         cin >> opc;
         cin.ignore();
         if(opc != 1 && opc != 2 && opc != 3){
@@ -100,7 +103,7 @@ void registroAnalisis(Menu& menu) {
             seguir = false;
         }
     } while (seguir);
-
+    system(CLEAR);
     switch (opc) {
     case 1:
         registroEgo(menu);
@@ -119,6 +122,7 @@ void registroAnalisis(Menu& menu) {
 void registroEgo(Menu& menu) {
     string nombre;
     string fecha;
+    
     cout << "Registrando análisis de EGO..." << endl;
     cout << "Nombre del paciente: ";
     getline(cin, nombre);
@@ -189,8 +193,13 @@ void agregarComponente(AnalisisBase& analisisBase){
     } while(opc == 's' || opc == 'S');
 }
 void consultarAnalisis(Menu& menu) {
-    cout << "Consultando análisis..." << endl;
-    cout << menu.getAnalisisBase().mostrarTodo();
+    int folio;
+    cout << ">> Consultar analisis<<" << endl;
+    cout << "Ingrese el folio del analisis a consultar: " << endl;
+    cin >> folio;
+    cin.ignore();
+    
+
 }
 
 void editarAnalisis() {
@@ -198,14 +207,114 @@ void editarAnalisis() {
     // Agregar aquí la lógica para editar un análisis
 }
 
-void eliminarAnalisis() {
-    cout << "Eliminando análisis..." << endl;
+void eliminarAnalisis(Menu& menu) {
+    int folio;
+    system(CLEAR);
+    cout << ">> Eliminar Analisis <<" << endl;
+    cout << "Ingrese el folio del análisis a eliminar: ";
+    cin >> folio;
+    cin.ignore();
+    int pos = menu.getAnalisisBase().buscarPorFolio(folio);
+    if (pos == -1) {
+        cout << "No se encontró el análisis con el folio proporcionado." << endl;
+        return;
+    }else{
+        system(CLEAR);
+        cout << "Análisis encontrado: " << endl;
+        cout << menu.getAnalisisBase().mostrarPorFolio(folio);
+        auto ayuda = &menu.getAnalisisBase();
+        cout << "\n¿Qué desea eliminar?" << endl;
+        cout << "1. Eliminar analisis"<<endl;
+        cout << "2. Elimiar componente"<<endl;
+        cout << "3. Cancelar"<<endl;
+        cout << "Seleccione una opción: ";
+        int opc;
+        cin >> opc;
+        cin.ignore();
+        if(opc == 1){
+            cout << "¿Está seguro de eliminar el análisis? (s/n): ";
+            char opc1;
+            cin >> opc1;
+            cin.ignore();
+            if(opc1 == 's' || opc1 == 'S'){
+
+            menu.getAnalisisBase().removeAnalisis(pos);
+            cout << "\nAnálisis eliminado correctamente." << endl;
+
+            }else{
+                cout << "Operación cancelada." << endl;
+
+            }
+        }else if(opc == 2){
+            cout << "Ingrese el nombre del componente a eliminar: ";
+            string nombre;
+            getline(cin, nombre);
+            cout << nombre << endl;
+            int pos = ayuda->buscarComponentePorNombre(nombre);
+            if(pos == -1){
+                cout << "No se encontró el componente con el nombre proporcionado."<< endl;
+                return;
+            }
+            cout << "Componente encontrado: " << endl;
+            cout << ayuda->mostrarComponente(pos);
+            cout << "¿Está seguro de eliminar el componente? (s/n): ";
+            char opc2;
+            cin >> opc2;
+            cin.ignore();
+            if(opc2 == 's' || opc2 == 'S'){
+
+                ayuda->removeComponente(pos);
+                cout << "Componente eliminado correctamente." << endl;
+
+            }else{
+                cout << "Operación cancelada." << endl;
+
+            }
+        }else{
+            cout << "Operación cancelada." << endl;
+
+        }
+    }
     // Agregar aquí la lógica para eliminar un análisis
 }
 
-void ordenarAnalisis() {
-    cout << "Ordenando análisis..." << endl;
+void ordenarAnalisis(Menu& menu) {
+    int opcion;
+    system(CLEAR);
+    cout << ">> Ordenar Analisis<<" << endl;
+    cout << "Seleccione el criterio de ordenamiento:" << endl;
+    cout << "1. Por nombre" << endl;
+    cout << "2. Por fecha" << endl;
+    cout << "3. Por tipo" << endl;
+    cout << "4. Por folio" << endl;
+    cout << "Seleccione una opción: ";
+    do {
+        cin >> opcion;
+        cin.ignore();
+        if (opcion < 1 || opcion > 4) {
+            cout << "Opción no válida. Intente nuevamente." << endl;
+        }
+    } while (opcion < 1 || opcion > 4);
+
+    switch (opcion) {
+    case 1:
+        // Ordenar por nombre
+        break;
+    case 2:
+        // Ordenar por fecha
+        break;
+    case 3:
+        // Ordenar por tipo
+        break;
+    case 4:
+        // Ordenar por folio
+        system(CLEAR);
+        cout << "Analisis ordenados por folio: " << endl;
+        cout << menu.getAnalisisBase().mostrarTodo();
+        break;
     // Agregar aquí la lógica para ordenar los análisis
+    }
+    
 }
 
 void mostrarMenu() {

@@ -36,9 +36,15 @@ public:
     void addComponente(Componente* componente);
     void removeComponente(int pos);
     void editarComponente(int pos, Componente* componente);
+    int buscarComponentePorNombre( string& _nombre);
+    string mostrarComponente(int pos) ;
 
     void addAnalisis(AnalisisBase* analisis);
     string mostrarTodo() const;
+    int getTamanoAnalisis(AnalisisBase* analisis) const;
+    int buscarPorFolio(int folio) const;
+    string mostrarPorFolio(int folio) const;
+    void removeAnalisis(int pos);
     // string str() const override;
     // void guardarEnArchivo(ofstream& archivo) const override;
 };

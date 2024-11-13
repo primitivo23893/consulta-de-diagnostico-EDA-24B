@@ -15,6 +15,7 @@ class Analisis {
 
 private:
     ListaEnlazada<AnalisisBase>* listaAnalisis;
+    
 public:
 
     Analisis();

@@ -23,6 +23,7 @@ public:
     string getRango() const;
 
     string str() const;
+
 };
 
 #endif

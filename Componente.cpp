@@ -32,6 +32,7 @@ string Componente::getRango() const {
 }
 string Componente::str() const {
     stringstream sout;
-    sout << "Nombre: " << nombre << "\nValor: " << valor << "\nRango: " << rango;
+    sout << nombre << "\t " << valor << "\t\t " << rango;
     return sout.str();
 }
+
