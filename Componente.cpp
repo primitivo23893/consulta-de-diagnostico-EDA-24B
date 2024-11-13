@@ -27,26 +27,8 @@ string Componente::getValor() const {
 string Componente::getRango() const {
     return rango;
 }
-
-int main(){
-    Componente comp;
-    string tempNombre, tempValor, tempRango;
-
-    cout << "Ingrese el nombre del componente: ";
-    getline(cin, tempNombre);
-    cout << "Ingrese el valor del componente: ";
-    getline(cin, tempValor);
-    cout << "Ingrese el rango del componente: ";
-    getline(cin, tempRango);
-
-    comp.setNombre(tempNombre);
-    comp.setValor(tempValor);
-    comp.setRango(tempRango);
-
-    cout << endl <<"Datos del componente: " << endl;
-    cout << "Nombre: " << comp.getNombre() << endl;
-    cout << "Valor: " << comp.getValor() << endl;
-    cout << "Rango: " << comp.getRango() << endl;
-
-    return 0;
+string Componente::str() const {
+    stringstream sout;
+    sout << "Nombre: " << nombre << "\nValor: " << valor << "\nRango: " << rango;
+    return sout.str();
 }

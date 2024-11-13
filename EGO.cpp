@@ -36,6 +36,40 @@ string EGO::str() {
     return sout.str();
 }
 
+void EGO::addComponente(Componente* componente) {
+    componentes.agregarFinal(componente);
+}
+void EGO::removeComponente(int pos) {
+    componentes.eliminarPosicion(pos);
+}
+void EGO::editarComponente(int pos, Componente* componente) {
+    if (pos < 0 || pos >= componentes.getTamano()) {
+        cout << "Posición inválida" << endl;
+        return;
+    }
+
+    Nodo<Componente>* actual = componentes.getInicio();
+    for (int i = 0; i < pos; ++i) {
+        actual = actual->siguiente;
+    }
+
+    if (actual != nullptr) {
+        actual->dato = componente;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void EGO::guardarEnArchivo(ofstream& archivo) const {
     if (archivo.is_open()) {

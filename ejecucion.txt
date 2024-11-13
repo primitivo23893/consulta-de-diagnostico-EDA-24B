@@ -1,0 +1,7 @@
+<Windows>
+g++ main.cpp menu.cpp -o main.exe
+.\main.exe
+
+<Linux>
+g++ main.cpp menu.cpp -o main
+./main

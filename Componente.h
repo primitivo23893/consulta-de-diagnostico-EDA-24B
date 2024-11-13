@@ -1,5 +1,7 @@
 #ifndef COMPONENTE_H
 #define COMPONENTE_H
+#include <sstream>
+#include <iomanip>
 
 #include <string>
 using namespace std;
@@ -18,6 +20,8 @@ public:
     string getNombre() const;
     string getValor() const;
     string getRango() const;
+
+    string str() const;
 };
 
 #endif
