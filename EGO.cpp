@@ -1,48 +1,49 @@
 #include "EGO.h"
 
-void EGO::ingresarDatos() {
-    cout << "Ingrese el nombre del paciente: ";
-    getline(cin, nombrePaciente);
-
-    cout << "Ingrese el tipo de examen (Examen General de Orina): ";
-    tipoExamen = "Examen General de Orina";
-
-    while (true) {
-        string atributo, valor;
-        cout << "Ingrese el nombre del atributo: ";
-        getline(cin, atributo);
-
-        cout << "Ingrese el valor de " << atributo << ": ";
-        getline(cin, valor);
-
-        datos[atributo] = valor;
-
-        char opcion;
-        cout << "¿Desea agregar otro atributo? (s/n): ";
-        cin >> opcion;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-        if (opcion == 'n' || opcion == 'N') break;
-    }
+EGO::EGO() {
+    nombre = "";
+    fecha = "";
+    tipo = "";
+    folio = 0;
+}
+void EGO::setNombre(const string& _nombre) {
+    nombre = _nombre;
+}
+string EGO::getNombre() const {
+    return nombre;
+}
+void EGO::setFolio(int _folio) {
+    folio = _folio;
+}
+int EGO::getFolio() const {
+    return folio;
+}
+void EGO::setFecha(const string& _fecha) {
+    fecha = _fecha;
+}
+string EGO::getFecha() const {
+    return fecha;
+}
+void EGO::setTipo(const string& _tipo) {
+    tipo = _tipo;
+}
+string EGO::getTipo() const {
+    return tipo;
+}
+string EGO::str() {
+    stringstream sout;
+    sout << "Nombre: " << nombre << "\nFolio: " << folio << "\nFecha: " << fecha << "\nTipo: " << tipo;
+    return sout.str();
 }
 
-void EGO::mostrarDatos() const {
-    cout << "Nombre del Paciente: " << nombrePaciente << endl;
-    cout << "Tipo de Examen: " << tipoExamen << endl;
-
-    for (const auto& dato : datos) {
-        cout << dato.first << ": " << dato.second << endl;
-    }
-    cout << "--------------------------" << endl;
-}
 
 void EGO::guardarEnArchivo(ofstream& archivo) const {
     if (archivo.is_open()) {
-        archivo << "Nombre del Paciente: " << nombrePaciente << endl;
-        archivo << "Tipo de Examen: " << tipoExamen << endl;
-        for (const auto& dato : datos) {
-            archivo << dato.first << ": " << dato.second << endl;
-        }
+        archivo << "Nombre del Paciente: " << nombre << endl;
+        archivo << "Tipo de Examen: " << tipo << endl;
+        // for (const auto& dato : ) {
+        //     archivo << dato.first << ": " << dato.second << endl;
+        // }
         archivo << "--------------------------" << endl << endl;
     } else {
         cout << "No se pudo abrir el archivo." << endl;
