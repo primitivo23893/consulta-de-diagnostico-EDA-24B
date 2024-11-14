@@ -1,5 +1,9 @@
 #include "EGO.h"
 
-EGO::EGO(){
-    setTipo("EGO");
+EGO::EGO(){}
+
+
+string EGO::getTipo() const {
+    return "EGO";
 }
+

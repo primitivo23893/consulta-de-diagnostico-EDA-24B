@@ -17,6 +17,7 @@ class QS : public AnalisisBase {
 
     public:
         QS();
+        string getTipo() const override;
 
 };
 

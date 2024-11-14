@@ -17,6 +17,7 @@ class Cultivo : public AnalisisBase {
 
     public:
         Cultivo();
+        string getTipo() const override;
 
 };
 

@@ -1,5 +1,6 @@
 #include "QS.h"
 
-QS::QS() {
-    setTipo("QS");
+QS::QS() {}
+string QS::getTipo() const {
+    return "QS";
 }

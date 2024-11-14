@@ -14,9 +14,6 @@ private:
     string nombre;
     int folio;
     string fecha;
-    string tipo;
-
-    static vector<AnalisisBase*> analisis;
 
 public:
     AnalisisBase();
@@ -30,8 +27,7 @@ public:
     int getFolio() const;
     void setFecha(const string& _fecha);
     string getFecha() const;
-    void setTipo(const string& _tipo);
-    string getTipo() const;
+    virtual string getTipo() const;
 
     void addComponente(Componente* componente);
     void removeComponente(int pos);
@@ -40,7 +36,6 @@ public:
     string mostrarComponente(int pos) ;
 
     void addAnalisis(AnalisisBase* analisis);
-    string mostrarTodo() const;
     int getTamanoAnalisis(AnalisisBase* analisis) const;
     int buscarPorFolio(int folio) const;
     string mostrarPorFolio(int folio) const;

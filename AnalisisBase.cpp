@@ -1,9 +1,7 @@
-#include "AnalisisBase.h"
-
-vector<AnalisisBase*> AnalisisBase::analisis;
+#include "AnalisisBase.h"   
 
 AnalisisBase::AnalisisBase()
-    : nombre(""), folio(0), fecha(""), tipo("") {}
+    : nombre(""), folio(0), fecha("") {}
 
 
 void AnalisisBase::setNombre(const string& _nombre) {
@@ -30,12 +28,8 @@ string AnalisisBase::getFecha() const {
     return fecha;
 }
 
-void AnalisisBase::setTipo(const string& _tipo) {
-    tipo = _tipo;
-}
-
 string AnalisisBase::getTipo() const {
-    return tipo;
+    return "Analisis Base";
 }
 
 void AnalisisBase::addComponente(Componente* componente) {
@@ -54,13 +48,7 @@ void AnalisisBase::editarComponente(int pos, Componente* componente) {
 
     componentes[pos] = *componente;
 }
-AnalisisBase* AnalisisBase::getAnalisis(int pos) const {
-    if (pos < 0 || pos >= AnalisisBase::analisis.size()) {
-        cout << "Posición inválida" << endl;
-        return nullptr;
-    }
-    return AnalisisBase::analisis[pos];
-}
+
 int AnalisisBase::buscarComponentePorNombre(string& _nombre) {
     int pos = 0;
     cout<< "Componentes.size() es: " << componentes.size() << endl;
@@ -88,7 +76,7 @@ string AnalisisBase::mostrarComponente(int pos) {
 
 string AnalisisBase::str() {
     stringstream sout;
-    sout << "\nNombre: " << nombre << "\tFolio: " << folio << "\tFecha: " << fecha << "\tTipo: " << tipo;
+    sout << "\nNombre: " << nombre << "\tFolio: " << folio << "\tFecha: " << fecha << "\tTipo: " << this->getTipo();
     sout << "\nComponentes: ";
     sout << "\n" << setw(20) << left << "Nombre" << setw(15) << "Valor" << setw(20) << "Rango" << "\n";
     for (const auto& componente : componentes) {
@@ -96,27 +84,7 @@ string AnalisisBase::str() {
     }
     return sout.str();
 }
-string AnalisisBase::mostrarTodo()const{
-    stringstream sout;
-    for(const auto& analisis : AnalisisBase::analisis){
-        sout << analisis->str() << endl;
-    }
-    return sout.str();
-}
-void AnalisisBase::addAnalisis(AnalisisBase* analisis) {
-    AnalisisBase::analisis.push_back(analisis);
-}
-void AnalisisBase::editarAnalisis(int pos, AnalisisBase* analisis) {
-    if (pos < 0 || pos >= AnalisisBase::analisis.size()) {
-        cout << "Posición inválida" << endl;
-        return;
-    }
-
-    AnalisisBase::analisis[pos] = analisis;
-}
-int AnalisisBase::getTamanoAnalisis(AnalisisBase* analisis) const {
-    return AnalisisBase::analisis.size();
-}
+/*
 int AnalisisBase::buscarPorFolio(int folio) const {
     for (int i = 0; i < AnalisisBase::analisis.size(); i++) {
         if (AnalisisBase::analisis[i]->getFolio() == folio) {
@@ -125,6 +93,8 @@ int AnalisisBase::buscarPorFolio(int folio) const {
     }
     return -1;
 }
+*/
+/*
 string AnalisisBase::mostrarPorFolio(int folio) const {
     int pos = buscarPorFolio(folio);
     if (pos == -1) {
@@ -132,9 +102,7 @@ string AnalisisBase::mostrarPorFolio(int folio) const {
     }
     return AnalisisBase::analisis[pos]->str();
 }
-void AnalisisBase::removeAnalisis(int pos) {
-    AnalisisBase::analisis.erase(AnalisisBase::analisis.begin() + pos);
-}
+*/
 // void AnalisisBase::guardarEnArchivo(ofstream& archivo) const {
 //     if (archivo.is_open()) {
 //         archivo << "Nombre del Paciente: " << nombre << endl;
@@ -154,7 +122,7 @@ vector<Componente> AnalisisBase::getComponentes() const {
 
 string AnalisisBase::ordenarNombre()const{
     stringstream sout;
-    vector<AnalisisBase*> analisisOrdenados = AnalisisBase::analisis;
+    vector<AnalisisBase*> analisisOrdenados = {};//AnalisisBase::analisis;
     sort(analisisOrdenados.begin(), analisisOrdenados.end(), [](AnalisisBase* a, AnalisisBase* b) {
         return a->getNombre() < b->getNombre();
     });
@@ -165,7 +133,7 @@ string AnalisisBase::ordenarNombre()const{
 }
 string AnalisisBase::ordenarFecha()const{
     stringstream sout;
-    vector<AnalisisBase*> analisisOrdenados = AnalisisBase::analisis;
+    vector<AnalisisBase*> analisisOrdenados = {};//AnalisisBase::analisis;
     sort(analisisOrdenados.begin(), analisisOrdenados.end(), [](AnalisisBase* a, AnalisisBase* b) {
         return a->getFecha() < b->getFecha();
     });
@@ -176,7 +144,7 @@ string AnalisisBase::ordenarFecha()const{
 }
 string AnalisisBase::ordenarTipo()const{
     stringstream sout;
-    vector<AnalisisBase*> analisisOrdenados = AnalisisBase::analisis;
+    vector<AnalisisBase*> analisisOrdenados = {};//AnalisisBase::analisis;
     sort(analisisOrdenados.begin(), analisisOrdenados.end(), [](AnalisisBase* a, AnalisisBase* b) {
         return a->getTipo() < b->getTipo();
     });

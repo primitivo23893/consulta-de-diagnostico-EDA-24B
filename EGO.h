@@ -17,6 +17,7 @@ class EGO : public AnalisisBase {
 
     public:
         EGO();
+        string getTipo() const override;
 
 };
 

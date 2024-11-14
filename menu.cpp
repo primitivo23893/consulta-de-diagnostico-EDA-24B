@@ -80,8 +80,11 @@ void Menu::setFolio(int folio) {
     folioGlobal = folio;
 }
 
-AnalisisBase& Menu::getAnalisisBase() {
-    return analisisBase;
+const vector<std::unique_ptr<AnalisisBase>>& Menu::getListaAnalisis() const {
+    return listaAnalisis;
+}
+vector<std::unique_ptr<AnalisisBase>>& Menu::getListaAnalisis() {
+    return listaAnalisis;
 }
 
 void registroAnalisis(Menu& menu) {
@@ -91,8 +94,8 @@ void registroAnalisis(Menu& menu) {
         system(CLEAR);
         cout << ">> Registro de Análisis <<" << endl;
         cout << "Selecciona el tipo de análisis a registrar:" << endl;
-        cout << "1. EGO" << endl;
-        cout << "2. QS" << endl;
+        cout << "1. Examen General de Orina (EGO)." << endl;
+        cout << "2. Quimica Sanguinea (QS)" << endl;
         cout << "3. Cultivo" << endl;
         cout << "\nSeleccione una opción: ";
         cin >> opc;
@@ -123,56 +126,59 @@ void registroEgo(Menu& menu) {
     string nombre;
     string fecha;
     
-    cout << "Registrando análisis de EGO..." << endl;
+    cout << ">Registrando análisis de Examen General de Orina (EGO) <" << endl<<endl;
     cout << "Nombre del paciente: ";
     getline(cin, nombre);
     cout << "Fecha de realización: ";
     getline(cin, fecha);
 
-    EGO* ego = new EGO();
+    unique_ptr<EGO> ego = make_unique<EGO>();
     ego->setNombre(nombre);
     ego->setFecha(fecha);
     ego->setFolio(menu.getFolio());
     menu.incrementarFolio();
     agregarComponente(*ego);
-    menu.getAnalisisBase().addAnalisis(ego);
+    menu.getListaAnalisis().emplace_back(std::move(ego));
+    cout << "Análisis registrado correctamente con el Folio: "<<menu.getFolio()-1 << endl;
 }
 
 void registroQS(Menu& menu) {
     string nombre;
     string fecha;
-    cout << "Registrando análisis de QS..." << endl;
+    cout << ">Registrando análisis de Quimica Sanguinea (QS) <" << endl << endl;
     cout << "Nombre del paciente: ";
     getline(cin, nombre);
     cout << "Fecha de realización: ";
     getline(cin, fecha);
 
-    QS* qs = new QS();
+    unique_ptr<QS> qs = make_unique<QS>();
     qs->setNombre(nombre);
     qs->setFecha(fecha);
     qs->setFolio(menu.getFolio());
     menu.incrementarFolio();
     
     agregarComponente(*qs);
-    menu.getAnalisisBase().addAnalisis(qs);
+    menu.getListaAnalisis().emplace_back(std::move(qs));
+    cout << "Análisis registrado correctamente con el Folio: "<<menu.getFolio()-1 << endl;
 }
 
 void registroCultivo(Menu& menu) {
     string nombre;
     string fecha;
-    cout << "Registrando análisis de Cultivo..." << endl;
+    cout << "> Registrando análisis de Cultivo <" << endl << endl;
     cout << "Nombre del paciente: ";
     getline(cin, nombre);
     cout << "Fecha de realización: ";
     getline(cin, fecha);
 
-    Cultivo* cultivo = new Cultivo();
+    unique_ptr<Cultivo> cultivo = make_unique<Cultivo>();
     cultivo->setNombre(nombre);
     cultivo->setFecha(fecha);
     cultivo->setFolio(menu.getFolio());
     menu.incrementarFolio();
     agregarComponente(*cultivo);
-    menu.getAnalisisBase().addAnalisis(cultivo);
+    menu.getListaAnalisis().emplace_back(std::move(cultivo));
+    //cout
 }
 void agregarComponente(AnalisisBase& analisisBase){
     string nombre;
@@ -180,6 +186,8 @@ void agregarComponente(AnalisisBase& analisisBase){
     string rango;
     char opc;
     do{
+        system(CLEAR);
+        cout << "> Agregar Componente <" << endl << endl;
         cout << "Nombre del componente: ";
         getline(cin, nombre);
         cout << "Valor del componente: ";
@@ -192,6 +200,24 @@ void agregarComponente(AnalisisBase& analisisBase){
         cin.ignore();
     } while(opc == 's' || opc == 'S');
 }
+
+int buscarPorFolio(Menu& menu, int folio) {
+    for (int i = 0; i < menu.getListaAnalisis().size(); i++) {
+        if (menu.getListaAnalisis()[i]->getFolio() == folio) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+string mostrarPorFolio(Menu& menu,int folio) {
+    int pos = buscarPorFolio(menu, folio);
+    if (pos == -1) {
+        return "No se encontró el análisis con el folio proporcionado.";
+    }
+    return menu.getListaAnalisis()[pos]->str();
+}
+
 void consultarAnalisis(Menu& menu) {
     int folio;
     system(CLEAR);
@@ -199,12 +225,12 @@ void consultarAnalisis(Menu& menu) {
     cout << "Ingrese el folio del analisis a consultar: " << endl;
     cin >> folio;
     cin.ignore();
-    int pos = menu.getAnalisisBase().buscarPorFolio(folio);
+    int pos = buscarPorFolio(menu, folio);
     if (pos == -1) {
         cout << "No se encontró el análisis con el folio proporcionado." << endl;
     } else {
         cout << "Análisis encontrado: " << endl;
-        cout << menu.getAnalisisBase().mostrarPorFolio(folio);
+        cout << mostrarPorFolio(menu, folio);
     }
     
 
@@ -217,15 +243,14 @@ void editarAnalisis(Menu& menu) {
     int folio;
     cin >> folio;
     cin.ignore();
-    int pos = menu.getAnalisisBase().buscarPorFolio(folio);
+    int pos = buscarPorFolio(menu, folio);
     if (pos == -1) {
         cout << "No se encontró el análisis con el folio proporcionado." << endl;
         return;
     } else {
         system(CLEAR);
         cout << "Análisis encontrado: " << endl;
-        cout << menu.getAnalisisBase().mostrarPorFolio(folio);
-        auto ayuda = &menu.getAnalisisBase();
+        cout << mostrarPorFolio(menu, folio);
         cout << "\n¿Qué desea editar?" << endl;
         cout << "1. Editar análisis" << endl;
         cout << "2. Editar componente" << endl;
@@ -240,9 +265,9 @@ void editarAnalisis(Menu& menu) {
             string tipo;
             system(CLEAR);
             cout << "Analisis a Editar" << endl;
-            cout << menu.getAnalisisBase().mostrarPorFolio(folio);
+            cout << mostrarPorFolio(menu, folio);
             // Guardar los datos anteriores
-            AnalisisBase* analisis = menu.getAnalisisBase().getAnalisis(pos);
+            auto& analisis = menu.getListaAnalisis()[pos];
             string nombreAnterior = analisis->getNombre();
             string fechaAnterior = analisis->getFecha();
             string tipoAnterior = analisis->getTipo();
@@ -261,7 +286,20 @@ void editarAnalisis(Menu& menu) {
             getline(cin, tipo);
 
             // Crear un nuevo análisis
-            AnalisisBase* nuevoAnalisis = new AnalisisBase();
+            unique_ptr<AnalisisBase> nuevoAnalisis;
+            if(tipo == "-1") {
+                tipo = tipoAnterior;
+            }
+            if (tipo == "EGO") {
+                nuevoAnalisis = make_unique<EGO>();
+            } else if (tipo == "QS") {
+                nuevoAnalisis = make_unique<QS>();
+            } else if (tipo == "Cultivo") {
+                nuevoAnalisis = make_unique<Cultivo>();
+            } else {
+                cout << "Tipo de análisis no válido." << endl;
+                return;
+            }
             // Editar los datos
             if (nombre == "-1") {
                 nuevoAnalisis->setNombre(nombreAnterior);
@@ -274,12 +312,6 @@ void editarAnalisis(Menu& menu) {
             } else {
                 nuevoAnalisis->setFecha(fecha);
             }
-
-            if (tipo == "-1") {
-                nuevoAnalisis->setTipo(tipoAnterior);
-            } else {
-                nuevoAnalisis->setTipo(tipo);
-            }
             nuevoAnalisis->setFolio(folio);
 
             // Copiar los componentes del análisis anterior al nuevo
@@ -287,20 +319,21 @@ void editarAnalisis(Menu& menu) {
                 nuevoAnalisis->addComponente(new Componente(componente));
             }
 
-            menu.getAnalisisBase().editarAnalisis(pos, nuevoAnalisis);
+            menu.getListaAnalisis()[pos] = std::move(nuevoAnalisis);
 
             cout << "Análisis editado correctamente." << endl;
         } else if (opc == 2) {
             cout << "Ingrese el nombre del componente a editar: ";
             string nombre;
             getline(cin, nombre);
-            int posComponente = menu.getAnalisisBase().buscarComponentePorNombre(nombre);
+            auto& analisis = *menu.getListaAnalisis()[pos];
+            int posComponente = analisis.buscarComponentePorNombre(nombre);
             if (posComponente == -1) {
                 cout << "No se encontró el componente con el nombre proporcionado." << endl;
                 return;
             }
             cout << "Componente encontrado: " << endl;
-            cout << menu.getAnalisisBase().mostrarComponente(posComponente);
+            cout << analisis.mostrarComponente(posComponente);
             cout << "Ingrese el nuevo nombre del componente: ";
             string nombreNuevo;
             getline(cin, nombreNuevo);
@@ -310,7 +343,7 @@ void editarAnalisis(Menu& menu) {
             cout << "Ingrese el nuevo rango del componente: ";
             string rangoNuevo;
             getline(cin, rangoNuevo);
-            menu.getAnalisisBase().editarComponente(posComponente, new Componente(nombreNuevo, valorNuevo, rangoNuevo));
+            analisis.editarComponente(posComponente, new Componente(nombreNuevo, valorNuevo, rangoNuevo));
             cout << "Componente editado correctamente." << endl;
         } else {
             cout << "Operación cancelada." << endl;
@@ -325,15 +358,14 @@ void eliminarAnalisis(Menu& menu) {
     cout << "Ingrese el folio del análisis a eliminar: ";
     cin >> folio;
     cin.ignore();
-    int pos = menu.getAnalisisBase().buscarPorFolio(folio);
+    int pos = buscarPorFolio(menu, folio);
     if (pos == -1) {
         cout << "No se encontró el análisis con el folio proporcionado." << endl;
         return;
     }else{
         system(CLEAR);
         cout << "Análisis encontrado: " << endl;
-        cout << menu.getAnalisisBase().mostrarPorFolio(folio);
-        auto ayuda = &menu.getAnalisisBase();
+        cout <<mostrarPorFolio(menu, folio);
         cout << "\n¿Qué desea eliminar?" << endl;
         cout << "1. Eliminar analisis"<<endl;
         cout << "2. Elimiar componente"<<endl;
@@ -348,8 +380,8 @@ void eliminarAnalisis(Menu& menu) {
             cin >> opc1;
             cin.ignore();
             if(opc1 == 's' || opc1 == 'S'){
-
-            menu.getAnalisisBase().removeAnalisis(pos);
+            auto& lista = menu.getListaAnalisis();
+            lista.erase(lista.begin() + pos);
             cout << "\nAnálisis eliminado correctamente." << endl;
 
             }else{
@@ -361,20 +393,21 @@ void eliminarAnalisis(Menu& menu) {
             string nombre;
             getline(cin, nombre);
             cout << nombre << endl;
-            int pos = ayuda->buscarComponentePorNombre(nombre);
+            auto& analisis = *menu.getListaAnalisis()[pos];
+            int pos = analisis.buscarComponentePorNombre(nombre);
             if(pos == -1){
                 cout << "No se encontró el componente con el nombre proporcionado."<< endl;
                 return;
             }
             cout << "Componente encontrado: " << endl;
-            cout << ayuda->mostrarComponente(pos);
+            cout << analisis.mostrarComponente(pos);
             cout << "¿Está seguro de eliminar el componente? (s/n): ";
             char opc2;
             cin >> opc2;
             cin.ignore();
             if(opc2 == 's' || opc2 == 'S'){
 
-                ayuda->removeComponente(pos);
+                analisis.removeComponente(pos);
                 cout << "Componente eliminado correctamente." << endl;
 
             }else{
@@ -387,6 +420,85 @@ void eliminarAnalisis(Menu& menu) {
         }
     }
     // Agregar aquí la lógica para eliminar un análisis
+}
+
+string mostrarAnalisis(const Menu& menu) {
+    stringstream sout;
+    for(auto& analisis : menu.getListaAnalisis()){
+        sout << analisis->str() << endl;
+    }
+    return sout.str();
+}
+
+vector<unique_ptr<AnalisisBase>> copiarLista(const Menu& menu) {
+    vector<unique_ptr<AnalisisBase>> copia;
+    for (const auto& analisis : menu.getListaAnalisis()) {
+        if(analisis->getTipo() == "EGO"){
+            unique_ptr<EGO> ego = make_unique<EGO>();
+            ego->setNombre(analisis->getNombre());
+            ego->setFecha(analisis->getFecha());
+            ego->setFolio(analisis->getFolio());
+            for (const auto& componente : analisis->getComponentes()) {
+                ego->addComponente(new Componente(componente));
+            }
+            copia.emplace_back(std::move(ego));
+        } else if(analisis->getTipo() == "QS"){
+            unique_ptr<QS> qs = make_unique<QS>();
+            qs->setNombre(analisis->getNombre());
+            qs->setFecha(analisis->getFecha());
+            qs->setFolio(analisis->getFolio());
+            for (const auto& componente : analisis->getComponentes()) {
+                qs->addComponente(new Componente(componente));
+            }
+            copia.emplace_back(std::move(qs));
+        } else if(analisis->getTipo() == "Cultivo"){
+            unique_ptr<Cultivo> cultivo = make_unique<Cultivo>();
+            cultivo->setNombre(analisis->getNombre());
+            cultivo->setFecha(analisis->getFecha());
+            cultivo->setFolio(analisis->getFolio());
+            for (const auto& componente : analisis->getComponentes()) {
+                cultivo->addComponente(new Componente(componente));
+            }
+            copia.emplace_back(std::move(cultivo));
+        }
+    }
+    return copia;
+}
+
+string ordenarNombre(const Menu& menu) {
+    stringstream sout;
+    vector<unique_ptr<AnalisisBase>> analisisOrdenados = copiarLista(menu);
+    sort(analisisOrdenados.begin(), analisisOrdenados.end(), [](const unique_ptr<AnalisisBase>& a, const unique_ptr<AnalisisBase>& b) {
+        return a->getNombre() < b->getNombre();
+    });
+    for(auto& analisis : analisisOrdenados){
+        sout << analisis->str() << endl;
+    }
+    return sout.str();
+}
+
+string ordenarFecha(const Menu& menu) {
+    stringstream sout;
+    vector<unique_ptr<AnalisisBase>> analisisOrdenados = copiarLista(menu);
+    sort(analisisOrdenados.begin(), analisisOrdenados.end(), [](const unique_ptr<AnalisisBase>& a, const unique_ptr<AnalisisBase>& b) {
+        return a->getFecha() < b->getFecha();
+    });
+    for(auto& analisis : analisisOrdenados){
+        sout << analisis->str() << endl;
+    }
+    return sout.str();
+}
+
+string ordenarTipo(const Menu& menu) {
+    stringstream sout;
+    vector<unique_ptr<AnalisisBase>> analisisOrdenados = copiarLista(menu);
+    sort(analisisOrdenados.begin(), analisisOrdenados.end(), [](const unique_ptr<AnalisisBase>& a, const unique_ptr<AnalisisBase>& b) {
+        return a->getTipo() < b->getTipo();
+    });
+    for(auto& analisis : analisisOrdenados ){
+        sout << analisis->str() << endl;
+    }
+    return sout.str();
 }
 
 void ordenarAnalisis(Menu& menu) {
@@ -410,24 +522,27 @@ void ordenarAnalisis(Menu& menu) {
     switch (opcion) {
     case 1:
         // Ordenar por nombre
+        system(CLEAR);
         cout << "Analisis ordenados por nombre: " << endl;
-        cout << menu.getAnalisisBase().ordenarNombre();
+        cout << ordenarNombre(menu);
         break;
     case 2:
         // Ordenar por fecha
+        system(CLEAR);
         cout << "Analisis ordenados por fecha: " << endl;
-        cout << menu.getAnalisisBase().ordenarFecha();
+        cout << ordenarFecha(menu);
         break;
     case 3:
         // Ordenar por tipo
+        system(CLEAR);
         cout << "Analisis ordenados por tipo: " << endl;
-        cout << menu.getAnalisisBase().ordenarTipo();
+        cout << ordenarTipo(menu);
         break;
     case 4:
         // Ordenar por folio
         system(CLEAR);
         cout << "Analisis ordenados por folio: " << endl;
-        cout << menu.getAnalisisBase().mostrarTodo();
+        cout << mostrarAnalisis(menu);
         break;
     // Agregar aquí la lógica para ordenar los análisis
     }
@@ -435,7 +550,7 @@ void ordenarAnalisis(Menu& menu) {
 }
 
 void mostrarMenu() {
-    cout << "=== Menú Principal ===" << endl;
+    cout << "=== Menú Principal ===" << setw(30)<< endl;
     cout << "1. Registrar análisis" << endl;
     cout << "2. Consultar análisis" << endl;
     cout << "3. Editar análisis" << endl;
@@ -486,34 +601,34 @@ void a(Menu& menu) {
         
         if (i % 3 == 0) {
             tipo = "EGO";
-            EGO* ego = new EGO();
+            unique_ptr<EGO> ego = make_unique<EGO>();
             ego->setNombre(nombre);
             ego->setFecha(fecha);
             ego->setFolio(menu.getFolio());
             menu.incrementarFolio();
             ego->addComponente(new Componente("Glucosa", "90 mg/dL", "70-100 mg/dL"));
             ego->addComponente(new Componente("Proteínas", "Negativo", "Negativo"));
-            menu.getAnalisisBase().addAnalisis(ego);
+            menu.getListaAnalisis().emplace_back(std::move(ego));
         } else if (i % 3 == 1) {
             tipo = "QS";
-            QS* qs = new QS();
+            unique_ptr<QS> qs = make_unique<QS>();
             qs->setNombre(nombre);
             qs->setFecha(fecha);
             qs->setFolio(menu.getFolio());
             menu.incrementarFolio();
             qs->addComponente(new Componente("Colesterol", "180 mg/dL", "125-200 mg/dL"));
             qs->addComponente(new Componente("Triglicéridos", "150 mg/dL", "50-150 mg/dL"));
-            menu.getAnalisisBase().addAnalisis(qs);
+            menu.getListaAnalisis().emplace_back(std::move(qs));
         } else {
             tipo = "Cultivo";
-            Cultivo* cultivo = new Cultivo();
+            unique_ptr<Cultivo> cultivo = make_unique<Cultivo>();
             cultivo->setNombre(nombre);
             cultivo->setFecha(fecha);
             cultivo->setFolio(menu.getFolio());
             menu.incrementarFolio();
             cultivo->addComponente(new Componente("Bacterias", "Positivo", "Negativo"));
             cultivo->addComponente(new Componente("Leucocitos", "10 /µL", "0-5 /µL"));
-            menu.getAnalisisBase().addAnalisis(cultivo);
+            menu.getListaAnalisis().emplace_back(std::move(cultivo));
         }
     }
 }
