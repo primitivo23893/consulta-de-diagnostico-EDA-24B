@@ -4,6 +4,10 @@
 #include "Cultivo.h"
 
 #include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <fstream>
+
 using namespace std;
 
 #ifdef _WIN32
@@ -22,6 +26,7 @@ void registroQS(Menu& menu);
 void registroCultivo(Menu& menu);
 void agregarComponente(AnalisisBase& analisisBase);
 void mostrarMenu();
+void imprimirAnalisisEnArchivo(Menu& menu, int folio);
 void a(Menu& menu);
 Menu::Menu() {
     folioGlobal = 1;
@@ -97,14 +102,21 @@ void registroAnalisis(Menu& menu) {
         cout << "1. Examen General de Orina (EGO)." << endl;
         cout << "2. Quimica Sanguinea (QS)" << endl;
         cout << "3. Cultivo" << endl;
+        cout << "4. Cancelar" << endl;
         cout << "\nSeleccione una opción: ";
         cin >> opc;
         cin.ignore();
-        if(opc != 1 && opc != 2 && opc != 3){
+        if(opc != 1 && opc != 2 && opc != 3 && opc != 4){
             cout << "Opción no válida. Intente nuevamente." << endl;
-        } else {
+            cout << "Presione Enter para continuar..." << endl;
+            cin.get();
+        } if (opc == 4) {
+            
+            seguir = false;
+        }else{
             seguir = false;
         }
+
     } while (seguir);
     system(CLEAR);
     switch (opc) {
@@ -116,6 +128,9 @@ void registroAnalisis(Menu& menu) {
         break;
     case 3:
         registroCultivo(menu);
+        break;
+    case 4:
+        cout << "Operación cancelada." << endl;
         break;
     default:
         break;
@@ -178,7 +193,7 @@ void registroCultivo(Menu& menu) {
     menu.incrementarFolio();
     agregarComponente(*cultivo);
     menu.getListaAnalisis().emplace_back(std::move(cultivo));
-    //cout
+    //
 }
 void agregarComponente(AnalisisBase& analisisBase){
     string nombre;
@@ -222,7 +237,7 @@ void consultarAnalisis(Menu& menu) {
     int folio;
     system(CLEAR);
     cout << ">> Consultar analisis<<" << endl;
-    cout << "Ingrese el folio del analisis a consultar: " << endl;
+    cout << "Ingrese el folio del analisis a consultar: ";
     cin >> folio;
     cin.ignore();
     int pos = buscarPorFolio(menu, folio);
@@ -231,11 +246,15 @@ void consultarAnalisis(Menu& menu) {
     } else {
         cout << "Análisis encontrado: " << endl;
         cout << mostrarPorFolio(menu, folio);
+        cout << endl << "¿Desea imprimir el análisis en un archivo? (s/n): ";
+        char opc;
+        cin >> opc;
+        cin.ignore();
+        if (opc == 's' || opc == 'S') {
+            imprimirAnalisisEnArchivo(menu, folio); 
+        }
     }
-    
-
 }
-
 void editarAnalisis(Menu& menu) {
     system(CLEAR);
     cout << ">> Editar Analisis <<" << endl;
@@ -252,9 +271,10 @@ void editarAnalisis(Menu& menu) {
         cout << "Análisis encontrado: " << endl;
         cout << mostrarPorFolio(menu, folio);
         cout << "\n¿Qué desea editar?" << endl;
-        cout << "1. Editar análisis" << endl;
+        cout << "1. Editar datos del análisis" << endl;
         cout << "2. Editar componente" << endl;
-        cout << "3. Cancelar" << endl;
+        cout << "3. Agregar nuevo componente" << endl;
+        cout << "4. Cancelar" << endl;
         cout << "Seleccione una opción: ";
         int opc;
         cin >> opc;
@@ -271,13 +291,10 @@ void editarAnalisis(Menu& menu) {
             string nombreAnterior = analisis->getNombre();
             string fechaAnterior = analisis->getFecha();
             string tipoAnterior = analisis->getTipo();
-            cout << "Este es el valor antiguo de nombre: " << nombreAnterior << endl;
-            cout << "Este es el valor antiguo de fecha: " << fechaAnterior << endl;
-            cout << "Este es el valor antiguo de tipo: " << tipoAnterior << endl;
 
             // Editar los datos
             cout << "Ingrese los nuevos datos del análisis:" << endl;
-            cout << "\t\t\t\t\tNota: Si no desea editar un campo, coloque -1." << endl;
+            cout << "\t\t\tNota: Si no desea editar un campo, coloque -1." << endl;
             cout << endl << "Nuevo nombre: ";
             getline(cin, nombre);
             cout << "Fecha de realización: ";
@@ -323,6 +340,7 @@ void editarAnalisis(Menu& menu) {
 
             cout << "Análisis editado correctamente." << endl;
         } else if (opc == 2) {
+            system(CLEAR);
             cout << "Ingrese el nombre del componente a editar: ";
             string nombre;
             getline(cin, nombre);
@@ -334,6 +352,13 @@ void editarAnalisis(Menu& menu) {
             }
             cout << "Componente encontrado: " << endl;
             cout << analisis.mostrarComponente(posComponente);
+
+            string nombreAnterior = analisis.getComponentes()[posComponente].getNombre();
+            string valorAnterior = analisis.getComponentes()[posComponente].getValor();
+            string rangoAnterior = analisis.getComponentes()[posComponente].getRango();
+
+            cout << endl <<"\t\t\tNota: Si no desea editar un campo, coloque -1." << endl;
+
             cout << "Ingrese el nuevo nombre del componente: ";
             string nombreNuevo;
             getline(cin, nombreNuevo);
@@ -343,9 +368,25 @@ void editarAnalisis(Menu& menu) {
             cout << "Ingrese el nuevo rango del componente: ";
             string rangoNuevo;
             getline(cin, rangoNuevo);
+
+            if (nombreNuevo == "-1") {
+                nombreNuevo = nombreAnterior;
+            }
+            if (valorNuevo == "-1") {
+                valorNuevo = valorAnterior;
+            }
+            if (rangoNuevo == "-1") {
+                rangoNuevo = rangoAnterior;
+            }
+
             analisis.editarComponente(posComponente, new Componente(nombreNuevo, valorNuevo, rangoNuevo));
             cout << "Componente editado correctamente." << endl;
-        } else {
+            
+        } else 
+        if (opc == 3) {
+            agregarComponente(*menu.getListaAnalisis()[pos]);
+            cout << "Componente agregado correctamente." << endl;
+        }else{
             cout << "Operación cancelada." << endl;
         }
     }
@@ -550,16 +591,29 @@ void ordenarAnalisis(Menu& menu) {
 }
 
 void mostrarMenu() {
-    cout << "=== Menú Principal ===" << setw(30)<< endl;
+    cout << "=== Menú Principal ===" << endl<<endl;
     cout << "1. Registrar análisis" << endl;
     cout << "2. Consultar análisis" << endl;
     cout << "3. Editar análisis" << endl;
     cout << "4. Eliminar análisis" << endl;
     cout << "5. Ordenar análisis" << endl;
-    cout << "6. Salir" << endl;
+    cout << "6. Salir" << endl << endl;
     cout << "Seleccione una opción: ";
 }
-
+void imprimirAnalisisEnArchivo(Menu& menu, int folio) {
+    ofstream archivo("resultados/analisis_" + to_string(folio) + ".txt");
+    if (!archivo.is_open()) {
+        cout << "No se pudo abrir el archivo para imprimir el análisis." << endl;
+        return;
+    }
+    if (archivo.is_open()) {
+        archivo << mostrarPorFolio(menu, folio);
+        archivo.close();
+        cout << endl << "Análisis impreso correctamente en el archivo en 'resultados/analisis_" << folio << ".txt'" << endl;
+    } else {
+        cout << "No se pudo abrir el archivo para imprimir el análisis." << endl;
+    }
+}
 
 
 
@@ -592,7 +646,7 @@ void mostrarMenu() {
 void a(Menu& menu) {
     
     vector<string> nombres = {"Juan Perez", "Maria Lopez", "Carlos Sanchez", "Ana Gomez", "Luis Fernandez"};
-    vector<string> fechas = {"2023-10-01", "2023-10-02", "2023-10-03", "2023-10-04", "2023-10-05"};
+    vector<string> fechas = {"01-10-2024", "02-10-2024", "03-10-2024", "04-10-2024", "05-10-2024"};
     
     for (int i = 0; i < 5; ++i) {
         string nombre = nombres[i];
@@ -627,7 +681,7 @@ void a(Menu& menu) {
             cultivo->setFolio(menu.getFolio());
             menu.incrementarFolio();
             cultivo->addComponente(new Componente("Bacterias", "Positivo", "Negativo"));
-            cultivo->addComponente(new Componente("Leucocitos", "10 /µL", "0-5 /µL"));
+            cultivo->addComponente(new Componente("Leucocitos", "10 /L", "0-5 /L"));
             menu.getListaAnalisis().emplace_back(std::move(cultivo));
         }
     }

@@ -51,7 +51,6 @@ void AnalisisBase::editarComponente(int pos, Componente* componente) {
 
 int AnalisisBase::buscarComponentePorNombre(string& _nombre) {
     int pos = 0;
-    cout<< "Componentes.size() es: " << componentes.size() << endl;
     for(const auto& componente : componentes){
         cout << componente.getNombre() << endl;
         if(componente.getNombre() == _nombre){
